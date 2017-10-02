@@ -1,0 +1,57 @@
+{% extends "layouts/master.html" %}
+
+{% block content %}
+
+<h1> Analysis</h1>
+
+<table class="ta1" cellspacing="0" cellpadding="top">
+  <tbody>
+    <tr>
+      <td class="no-print" style="width:17%" valign="top">
+        <div style="width:220px;" class="mdv">
+          <ol style="margin-top:0px;margin-bottom:0px;">
+            <li class="mli"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
+            <li class="mli">Summary</li>
+            <li class="mli"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
+            <li class="mli"><a href="operators.htm">Operators</a></li>
+          </ol>
+        </div>
+      </td>
+      <td style="width:83%" valign="top">
+        <div id="mdiv"><div class="gradient">&nbsp;Log</div>
+
+          <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
+            <colgroup> <col width="200px"> <col> </colgroup>
+            <tbody>
+              <th>Band</th><th>QSOs</th><th>Zones</th><th>DXCC</th><th>Points</th><th>Points/QSO</th>
+              {% for band in summary_info %}
+                <tr class="thc">
+                  <td>{{ band.0 }}</td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ band.0|floatformat }}">{{ band.1 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ band.0|floatformat }}&unique=cq">{{ band.3 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ band.0|floatformat }}&unique=dxcc">{{ band.2 }}</a></td>
+                  <td>{{ band.4 }}</td>
+                  <td>{{ band.5|floatformat:2 }}</td>
+                </tr>
+              {% endfor %}
+              <th></th><th></th><th></th><th></th><th></th><th></th><th>Score</th>
+                <tr class="thc">
+                  <td><b>Total</b></td>
+                  {% for band in summary_info_total %}
+                      <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1">{{ band.1 }}</a></td>
+                      <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1&unique_band=cq">{{ band.3 }}</a></td>
+                      <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1&unique_band=dxcc">{{ band.2 }}</a></td>
+                      <td>{{ band.4 }}</td>
+                      <td>{{ band.5|floatformat:2 }}</td>
+                      <td>{{ band.6 }}</td>
+                  {% endfor %}
+                </tr>
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}

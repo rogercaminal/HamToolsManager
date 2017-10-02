@@ -1,0 +1,57 @@
+{% extends "layouts/master.html" %}
+
+{% block content %}
+
+<h1> Analysis</h1>
+
+<table class="ta1" cellspacing="0" cellpadding="top">
+  <tbody>
+    <tr>
+      <td class="no-print" style="width:17%" valign="top">
+        <div style="width:220px;" class="mdv">
+          <ol style="margin-top:0px;margin-bottom:0px;">
+            <li class="mli"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
+            <li class="mli"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
+            <li class="mli">Log</a></li>
+            <li class="mli"><a href="operators.htm">Operators</a></li>
+          </ol>
+        </div>
+      </td>
+      <td style="width:83%" valign="top">
+        <div id="mdiv"><div class="gradient">&nbsp;Log</div>
+        pages:
+        {% for i in num_pages %}
+          {% if i == page %}
+            <b>{{ i }}</b>
+          {% else %}
+          <a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ i }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ i }}</a>
+          {% endif %}
+        {% endfor %}
+
+          <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
+            <colgroup> <col width="200px"> <col> </colgroup>
+            <tbody>
+              <th>QSO#</th><th>Band</th><th>Freq.</th><th>Date</th><th>Time</th><th>Callsign</th><th>Cont.</th><th>Country</th><th>CQ</th><th>Points</th>
+              {% for qso in log_info %}
+                <tr class="thc">
+                  <td>{{ qso.0 }}</td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ qso.1|floatformat }}">{{ qso.1|floatformat }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,freq:{{ qso.2 }}">{{ qso.2 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,date:{{ qso.3 }}">{{ qso.3 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,time:">{{ qso.4 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,call:{{ qso.5 }}">{{ qso.5 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,cont:{{ qso.6 }}">{{ qso.6|cut:"continent" }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,dxcc:{{ qso.7 }}">{{ qso.7 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,cq:{{ qso.8 }}">{{ qso.8 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,points:{{ qso.9 }}">{{ qso.9 }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+{% endblock %}
