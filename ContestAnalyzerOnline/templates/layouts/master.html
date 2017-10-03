@@ -1,30 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+
+  <head>
     <meta charset="UTF-8">
     {% load static %}
     <title>Contest analyzer online</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="{% static 'css/helper.css' %}">
     <link rel="stylesheet" href="{% static 'css/style.css' %}">
-</head>
-<body>
+  </head>
+
+  <body>
+
     <nav class="navbar navbar-inverse">
-        <div class="container-fluid">
-            <div class="navbar-header">
-                <a class="navbar-brand" href="#">Contest analyzer online</a>
-            </div>
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="{% url 'contestAnalyzer:index' %}">Contest analyzer online</a>
         </div>
+      </div>
     </nav>
 
-    <div class="container">
-        <!--This will be a dynamic block-->
-        {% block content %}
-        {% endblock %}
-    </div>
+
+    <table class="ta1" cellspacing="0" cellpadding="top">
+      <tbody>
+        <tr>
+
+          <td class="no-print" style="width:17%" valign="top">
+            <div style="width:220px;" class="mdv">
+              <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
+                <li class="mli"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
+                <li class="mli"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
+                <li class="mli"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
+              </ol>
+            </div>
+          </td>
+
+          <td class="no-print" style="width:83%" valign="top">
+            <div style="width:1000px;" class="container">
+              <!--This will be a dynamic block-->
+              {% block content %}
+              {% endblock %}
+            </div>
+          </td>
+
+        </tr>
+      </tbody>
+    </table>
 
     <footer style="text-align: center">
-        &copy; 2017 Contest analyzer online
+      &copy; 2017 Contest analyzer online
     </footer>
-</body>
+
+  </body>
+
 </html>

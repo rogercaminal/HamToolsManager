@@ -2,15 +2,20 @@ import os
 import ContestAnalyzerOnline.contestAnalyzer.toolBase
 import pandas as pd
 import numpy as np
+import pickle
 
 from pyhamtools import LookupLib, Callinfo
 from pyhamtools.locator import latlong_to_locator, calculate_heading
-my_lookuplib = LookupLib(lookuptype="countryfile")
-cinfo = Callinfo(my_lookuplib)
 
+my_lookuplib = LookupLib(lookuptype="countryfile")
 
 class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
+
     def applyToRow(self, row):
+
+        cinfo = Callinfo(my_lookuplib)
+
+        #--- Fill columns
         try:
             dxcc = cinfo.get_all(row["call"])
             row["dxcc"]      = dxcc["country"]
@@ -32,6 +37,9 @@ class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
 
 
     def applyToAll(self, contest):
+
+        cinfo = Callinfo(my_lookuplib)
+
         #--- Set correct format
         contest.log["zonecq"]  = contest.log["zonecq"].fillna(-1).astype("int")
         contest.log["zoneitu"] = contest.log["zoneitu"].fillna(-1).astype("int")

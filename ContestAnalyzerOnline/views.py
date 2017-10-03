@@ -1,6 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 
+import pandas as pd
+import numpy as np
+import pickle
+
 #def index(request):
 ##    return HttpResponse('I am in the ROOT of ContestAnalyzerOnline')
 #    return render(request, 'index.html')
@@ -35,18 +39,15 @@ def process(request):
     contest.logName = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contestType, year, mode, callsign, contestType, year, mode, callsign)
     contest.folderToSave = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign)
     contest.year = year
-    print "Before import log"
     doLoop = ContestAnalyzerOnline.contestAnalyzer.Utils.importLog(contest=contest, contestType=contestType, year=year, mode=mode, callsign=callsign, forceCSV=False)
-    print "After import log"
 
     # Get toolDictionary, with the tools to be applied.
     # To add a new tool:
     # - Define the class in a separate file
     # - Add it in toolDictionary
+    print "Importing tool dictionary"
     import ContestAnalyzerOnline.contestAnalyzer.toolDictionary
-    print "After importing tool dictionary"
     toolDict = ContestAnalyzerOnline.contestAnalyzer.toolDictionary.toolDictionary
-    print "After adding tools"
 
     # If it's a new log, or forceCSV=True, loop on tools.
     # Two functions:
@@ -58,27 +59,25 @@ def process(request):
             contest.log = contest.log.apply(lambda row : toolDict.tools()[tool].applyToRow(row), axis=1)
             toolDict.tools()[tool].applyToAll(contest)
 
-        # Save everything into formatted csv file
-        contest.log.to_csv("%s_formatted.csv" % (contest.logName.replace(".log", "")))
+        # Common: format fix for datetime
+        contest.log["datetime"] = pd.to_datetime(contest.log["datetime"])
 
-    # Common: read formatted csv and do studies
-    import pandas as pd
-    import numpy as np
-    contest.log = pd.read_csv("%s_formatted.csv" % contest.logName.replace(".log", ""), dtype=ContestAnalyzerOnline.contestAnalyzer.Utils.dict_types)
+        #--- Save contest object to pickle file
+        with open("%s.pickle" % contest.logName.replace(".log", ""), 'wb') as output:
+            pickle.dump(contest, output, pickle.HIGHEST_PROTOCOL)
 
-    # Common: format fix for datetime
-    contest.log["datetime"] = pd.to_datetime(contest.log["datetime"])
+    # Common: read formatted pickle file and do studies
+    contest = pickle.load( open("%s.pickle" % contest.logName.replace(".log", ""), 'rb') )
+
 
     # Generate plots
+    print "Importing plot dictionary"
     import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
-    plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
-    for plot in plotDict.names():
-        plotDict.plots()[plot].doPlot(contest=contest, doSave=True)
+    if doLoop:
+        plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
+        for plot in plotDict.names():
+            plotDict.plots()[plot].doPlot(contest=contest, doSave=True)
 
-    #--- Save contest object to pickle file
-    import pickle
-    with open("%s.pickle" % contest.logName.replace(".log", ""), 'wb') as output:
-        pickle.dump(contest, output, pickle.HIGHEST_PROTOCOL)
 
 #    return render(request, 'analysis_main.html', {'contest': contest})
     return redirect('contestAnalyzer:mainPage')
@@ -279,7 +278,7 @@ def contestLog(request):
     log_info = []
     for index, row in log.iterrows():
         log_info.append([
-            row["Unnamed: 0"]+1,
+            row["counter"],
             row["band"],
             row["frequency"],
             row["date"],

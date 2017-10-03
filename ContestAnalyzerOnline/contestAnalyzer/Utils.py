@@ -71,12 +71,74 @@ def getListOfYears(contestType):
     return years
 
 
+##________________________________________________________________________________________________________
+#def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
+#
+#    #--- Check if formatted csv file exists and used unless otherwise specified
+#    if (not os.path.exists("%s_formatted.csv" % contest.logName.replace(".log", "")) or forceCSV==True):
+#
+#        #--- Check if logfiles folder exists and create if not
+#        if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))):
+#            os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))
+#
+#        if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))):
+#            os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))
+#
+#        #--- See if log exists, otherwise download
+#        if (not os.path.isfile(contest.logName)):
+#            downloadedlog = ""
+#            try:
+#                downloadedlog = getLog(contestType, callsign, year, mode)
+#            except:
+#                print("Log not found!")
+#            infile = open(contest.logName, "wb")
+#            infile.write(downloadedlog)
+#            infile.close()
+#
+#        #--- Create csv file header
+#        csvfile = open(contest.logName.replace(".log",".csv"), "w")
+#        csvfile.write("frequency,mode,date,time,mycall,urrst,urnr,call,myrst,mynr,stn\n")
+#
+#        #--- Loop on lines info line by line to create data frame
+#        infile = open(contest.logName)
+#        lines = infile.readlines()
+#        for l in lines:
+#            line = l.split(":")[1].replace('\n', '')
+#            line = line[1:]
+#            if "QSO" in l:
+#                if len(line.split())==10:
+#                    line += ",0"
+#                line = ','.join(line.split())+"\n"
+#                csvfile.write(line)
+#        csvfile.close()
+#        infile.close()
+#        contest.log = pd.read_csv(contest.logName.replace(".log",".csv"), dtype=dict_types)
+#        os.remove(contest.logName.replace(".log",".csv"))
+#
+#        #--- Read contest information for original log file
+#        infile = open(contest.logName)
+#        infile.seek(0)
+#        readContestGeneralInfo(contest, infile)
+#        infile.close()
+#
+#        return True
+#
+#    #--- Read contest information for original log file
+#    infile = open(contest.logName)
+#    infile.seek(0)
+#    readContestGeneralInfo(contest, infile)
+#    infile.close()
+#
+#    return False
+
 #________________________________________________________________________________________________________
 def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
 
-    #--- Check if formatted csv file exists and used unless otherwise specified
-    if (not os.path.exists("%s_formatted.csv" % contest.logName.replace(".log", "")) or forceCSV==True):
+    print "Importing contest object..."
+    #--- Check if formatted pickle file exists and used unless otherwise specified
+    if (not os.path.exists("%s.pickle" % contest.logName.replace(".log", ""))):
 
+        print "Checking folders and creating them..."
         #--- Check if logfiles folder exists and create if not
         if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))
@@ -84,17 +146,17 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
         if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))
 
-        #--- See if log exists, otherwise download
-        if (not os.path.isfile(contest.logName)):
-            downloadedlog = ""
-            try:
-                downloadedlog = getLog(contestType, callsign, year, mode)
-            except:
-                print("Log not found!")
-            infile = open(contest.logName, "wb")
-            infile.write(downloadedlog)
-            infile.close()
+        #--- Download log file from web
+        downloadedlog = ""
+        try:
+            downloadedlog = getLog(contestType, callsign, year, mode)
+        except:
+            print("Log not found!")
+        infile = open(contest.logName, "wb")
+        infile.write(downloadedlog)
+        infile.close()
 
+        print "Creating Pandas object..."
         #--- Create csv file header
         csvfile = open(contest.logName.replace(".log",".csv"), "w")
         csvfile.write("frequency,mode,date,time,mycall,urrst,urnr,call,myrst,mynr,stn\n")
@@ -120,14 +182,9 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
         infile.seek(0)
         readContestGeneralInfo(contest, infile)
         infile.close()
+        os.remove(contest.logName)
 
         return True
-
-    #--- Read contest information for original log file
-    infile = open(contest.logName)
-    infile.seek(0)
-    readContestGeneralInfo(contest, infile)
-    infile.close()
 
     return False
 
