@@ -52,22 +52,6 @@ class tool_contest_evolution(ContestAnalyzerOnline.contestAnalyzer.toolBase.tool
         contest.log["qsos_evol_80"]  = contest.log[contest.log["band"]==80]["qsos_counter_band"].cumsum()
         contest.log["qsos_evol_160"] = contest.log[contest.log["band"]==160]["qsos_counter_band"].cumsum()
         
-        #--- Count points
-        import ContestAnalyzerOnline.contestAnalyzer.ctydat
-        ctyfile = open("ContestAnalyzerOnline/contestAnalyzer/cty.dat")
-        ctydat = ContestAnalyzerOnline.contestAnalyzer.ctydat.CtyDat(ctyfile.readlines())
-        ctyfile.close()
-        mydxcc      = np.NaN
-        myzonecq    = np.NaN
-        myzoneitu   = np.NaN
-        mycontinent = np.NaN
-        try:
-            dxcc = ctydat.getdxcc(contest.callsign)
-            mydxcc      = dxcc["name"]
-            myzonecq    = dxcc["cq"]
-            myzoneitu   = dxcc["itu"]
-            mycontinent = "continent"+dxcc["cont"]
-        except:
-            print("My DXCC info is not found!")
-        contest.log["points"] = np.where((contest.log["continent"]==mycontinent) & (contest.log["isdupe"]==0) & (pd.isnull(contest.log["continent"])==False), 1, \
-                                np.where((contest.log["continent"]!=mycontinent) & (contest.log["isdupe"]==0) & (pd.isnull(contest.log["continent"])==False), 3, 0))
+#        #--- Count points
+        contest.log["points"] = np.where((contest.log["continent"]==contest.log["mycontinent"]) & (contest.log["isdupe"]==0) & (pd.isnull(contest.log["continent"])==False), 1, \
+                                np.where((contest.log["continent"]!=contest.log["mycontinent"]) & (contest.log["isdupe"]==0) & (pd.isnull(contest.log["continent"])==False), 3, 0))

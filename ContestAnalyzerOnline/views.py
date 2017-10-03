@@ -35,14 +35,18 @@ def process(request):
     contest.logName = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contestType, year, mode, callsign, contestType, year, mode, callsign)
     contest.folderToSave = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign)
     contest.year = year
+    print "Before import log"
     doLoop = ContestAnalyzerOnline.contestAnalyzer.Utils.importLog(contest=contest, contestType=contestType, year=year, mode=mode, callsign=callsign, forceCSV=False)
+    print "After import log"
 
     # Get toolDictionary, with the tools to be applied.
     # To add a new tool:
     # - Define the class in a separate file
     # - Add it in toolDictionary
     import ContestAnalyzerOnline.contestAnalyzer.toolDictionary
+    print "After importing tool dictionary"
     toolDict = ContestAnalyzerOnline.contestAnalyzer.toolDictionary.toolDictionary
+    print "After adding tools"
 
     # If it's a new log, or forceCSV=True, loop on tools.
     # Two functions:
@@ -50,6 +54,7 @@ def process(request):
     # - applyToRow if complex function that needs to be computed qso by qso.
     if doLoop:
         for tool in toolDict.names():
+            print "Applying tool %s" % tool
             contest.log = contest.log.apply(lambda row : toolDict.tools()[tool].applyToRow(row), axis=1)
             toolDict.tools()[tool].applyToAll(contest)
 
