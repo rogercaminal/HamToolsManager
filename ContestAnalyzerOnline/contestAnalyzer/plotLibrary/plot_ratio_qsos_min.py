@@ -40,5 +40,5 @@ class plot_ratio_qsos_min(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBas
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__band.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__band.png", bbox_inches='tight')
 

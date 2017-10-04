@@ -330,3 +330,33 @@ def contestRates(request):
     rates_info.append(["120", rates["120min"][0], rates["120min"][0]/120., rates["120min"][0]*60./120., str(rates["120min"][1][0]), str(rates["120min"][1][1])])
 
     return render(request, 'analysis_rates.html', {'rates_info':rates_info})
+
+
+#________________________________________________________________________________________________________
+def contestPlots(request):
+    #--- Get info from form
+    search_info = request.session['cleaned_data']
+
+    #--- Retrieve contest object from pickle file
+    import ContestAnalyzerOnline.contestAnalyzer.Utils
+    contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
+
+#ContestAnalyzerOnline/contestAnalyzer/data/cqww_2016_cw_EA2EA/plots/
+    dict_plots = {}
+    dict_plots["qsos_vs_time__continent"]    = "plot_qsos_vs_time__continent"
+    dict_plots["qsos_vs_time__stationtype"]  = "plot_qsos_vs_time__stationtype"
+    dict_plots["fraction__stationtype"]      = "plot_fraction__stationtype"
+    dict_plots["qsos_vs_time__band"]         = "plot_qsos_vs_time__band"
+    dict_plots["mults_vs_qsos"]              = "plot_mults_vs_qsos"
+    dict_plots["time_vs_band_vs_continent"]  = "plot_time_vs_band_vs_continent"
+    dict_plots["freq_vs_time"]               = "plot_freq_vs_time"
+    dict_plots["call_length_morse"]          = "plot_call_length_morse"
+
+    plot_key = "dummie"
+    if request.GET.get('chart'):
+        plot_key = str(request.GET.get('chart'))
+
+    path = str("cqww_%s_%s_%s" % (contest.year, contest.cat_mode.lower(), contest.callsign))
+    image = ["%s/plots/%s.png"%(path, dict_plots[plot_key]), dict_plots[plot_key], "500", "500"]
+
+    return render(request, 'analysis_images.html', {'image':image[0], 'alt':image[1], 'width':image[2], 'height':image[3]})

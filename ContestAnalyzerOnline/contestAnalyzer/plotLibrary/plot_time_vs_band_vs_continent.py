@@ -23,4 +23,4 @@ class plot_time_vs_band_vs_continent(ContestAnalyzerOnline.contestAnalyzer.plotB
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_time_vs_band_vs_continent.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_time_vs_band_vs_continent.png", bbox_inches='tight')

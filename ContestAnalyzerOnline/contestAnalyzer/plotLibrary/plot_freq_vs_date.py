@@ -28,4 +28,4 @@ class plot_freq_vs_date(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase)
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_freq_vs_time.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_freq_vs_time.png", bbox_inches='tight')

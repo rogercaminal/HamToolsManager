@@ -18,4 +18,4 @@ class plot_mults_vs_qsos(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_mults_vs_qsos.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_mults_vs_qsos.png", bbox_inches='tight')

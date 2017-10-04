@@ -22,4 +22,4 @@ class plot_fraction_stationtype(ContestAnalyzerOnline.contestAnalyzer.plotBase.p
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_fraction__stationtype.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_fraction__stationtype.png", bbox_inches='tight')

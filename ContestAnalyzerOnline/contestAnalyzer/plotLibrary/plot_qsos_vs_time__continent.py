@@ -29,5 +29,5 @@ class plot_qsos_vs_time__continent(ContestAnalyzerOnline.contestAnalyzer.plotBas
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__continent.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__continent.png", bbox_inches='tight')
 

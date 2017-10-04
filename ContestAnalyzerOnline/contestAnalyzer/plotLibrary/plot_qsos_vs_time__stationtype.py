@@ -24,4 +24,4 @@ class plot_qsos_vs_time__stationtype(ContestAnalyzerOnline.contestAnalyzer.plotB
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__stationtype.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__stationtype.png", bbox_inches='tight')

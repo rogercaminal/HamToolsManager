@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'Summary/', views.contestSummary, name='summary'),
     url(r'Log/', views.contestLog, name='log'),
     url(r'Rates/', views.contestRates, name='rates'),
+    url(r'Charts/', views.contestPlots, name='plots'),
 ]

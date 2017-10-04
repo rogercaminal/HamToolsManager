@@ -33,4 +33,4 @@ class plot_lenghtcallmorse(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBa
         if not doSave:
             plt.show()
         else:
-            fig.savefig(contest.folderToSave+"plot_call_length_morse.pdf", bbox_inches='tight')
+            fig.savefig(contest.folderToSave+"plot_call_length_morse.png", bbox_inches='tight')
