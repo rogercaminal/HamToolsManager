@@ -6,6 +6,7 @@ toolDictionary = ContestAnalyzerOnline.contestAnalyzer.toolManager.toolManager()
 
 toolDictionary.addTool("tool_counter",           ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_counter.tool_counter("tool_counter"))
 toolDictionary.addTool("tool_datetime",          ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_datetime.tool_datetime("tool_datetime"))
+toolDictionary.addTool("tool_maxrates",          ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_maxrates.tool_maxrates("tool_maxrates"))
 toolDictionary.addTool("tool_hour",              ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_hour.tool_hour("tool_hour"))
 toolDictionary.addTool("tool_band",              ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_band.tool_band("tool_band"))
 toolDictionary.addTool("tool_station_type",      ContestAnalyzerOnline.contestAnalyzer.toolLibrary.tool_station_type.tool_station_type("tool_station_type"))

@@ -51,7 +51,6 @@ class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
         except:
             print "Problem getting my own DXCC info!"
 
-        print dxcc
         if len(dxcc.keys())>0:
             contest.log["mydxcc"]       = dxcc["country"]
             contest.log["myzonecq"]     = int(dxcc["cqz"])

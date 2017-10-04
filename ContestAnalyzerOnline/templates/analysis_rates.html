@@ -1,0 +1,25 @@
+{% extends "layouts/master.html" %}
+
+{% block content %}
+
+        <div id="mdiv"><div class="gradient">&nbsp; <h1>Rates</h1> </div>
+
+          <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
+            <colgroup> <col width="200px"> <col> </colgroup>
+            <tbody>
+              <th>Period, min</th><th>QSOs</th><th>QSOs/min</th><th>QSOs/hour</th><th>From</th><th>To</th>
+              {% for rate in rates_info %}
+                <tr class="thc">
+                  <td>{{ rate.0 }}</td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,maxRate_{{ rate.0 }}min">{{ rate.1 }}</a></td>
+                  <td>{{ rate.2|floatformat:1 }}</td>
+                  <td>{{ rate.3|floatformat:0 }}</td>
+                  <td>{{ rate.4 }}</td>
+                  <td>{{ rate.5 }}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+{% endblock %}

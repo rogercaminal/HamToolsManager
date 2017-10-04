@@ -23,6 +23,8 @@ class contest(object):
 
         self.logName = ""
 
+        self.maxRates = {}
+
     def __str__(self):
         line = ""
         line += "Call: %s\n" % self.callsign

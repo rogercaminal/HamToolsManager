@@ -41,19 +41,19 @@ def process(request):
     contest.year = year
     doLoop = ContestAnalyzerOnline.contestAnalyzer.Utils.importLog(contest=contest, contestType=contestType, year=year, mode=mode, callsign=callsign, forceCSV=False)
 
-    # Get toolDictionary, with the tools to be applied.
-    # To add a new tool:
-    # - Define the class in a separate file
-    # - Add it in toolDictionary
-    print "Importing tool dictionary"
-    import ContestAnalyzerOnline.contestAnalyzer.toolDictionary
-    toolDict = ContestAnalyzerOnline.contestAnalyzer.toolDictionary.toolDictionary
-
-    # If it's a new log, or forceCSV=True, loop on tools.
-    # Two functions:
-    # - applyToAll if computed using built-in functions in data frame.
-    # - applyToRow if complex function that needs to be computed qso by qso.
     if doLoop:
+        # Get toolDictionary, with the tools to be applied.
+        # To add a new tool:
+        # - Define the class in a separate file
+        # - Add it in toolDictionary
+        print "Importing tool dictionary"
+        import ContestAnalyzerOnline.contestAnalyzer.toolDictionary
+        toolDict = ContestAnalyzerOnline.contestAnalyzer.toolDictionary.toolDictionary
+
+        # If it's a new log, loop on tools.
+        # Two functions:
+        # - applyToAll if computed using built-in functions in data frame.
+        # - applyToRow if complex function that needs to be computed qso by qso.
         for tool in toolDict.names():
             print "Applying tool %s" % tool
             contest.log = contest.log.apply(lambda row : toolDict.tools()[tool].applyToRow(row), axis=1)
@@ -71,9 +71,9 @@ def process(request):
 
 
     # Generate plots
-    print "Importing plot dictionary"
-    import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
     if doLoop:
+        print "Importing plot dictionary"
+        import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
         plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
         for plot in plotDict.names():
             plotDict.plots()[plot].doPlot(contest=contest, doSave=True)
@@ -200,6 +200,24 @@ def contestLog(request):
                 points = int(r.replace("points:", ""))
                 log = log[log["points"]==points]
                 cumulated_info.append(r)
+            if 'maxRate_1min' in r:
+                log = log[log["maxRate_1min"]==1]
+                cumulated_info.append(r)
+            if 'maxRate_5min' in r:
+                log = log[log["maxRate_5min"]==1]
+                cumulated_info.append(r)
+            if 'maxRate_10min' in r:
+                log = log[log["maxRate_10min"]==1]
+                cumulated_info.append(r)
+            if 'maxRate_30min' in r:
+                log = log[log["maxRate_30min"]==1]
+                cumulated_info.append(r)
+            if 'maxRate_60min' in r:
+                log = log[log["maxRate_60min"]==1]
+                cumulated_info.append(r)
+            if 'maxRate_120min' in r:
+                log = log[log["maxRate_120min"]==1]
+                cumulated_info.append(r)
         cumulated_info = ','.join(cumulated_info)
 
     cumulated_unique_band = []
@@ -291,3 +309,24 @@ def contestLog(request):
             ])
 
     return render(request, 'analysis_log.html', {"log_info":log_info ,'cumulated_info':cumulated_info, 'cumulated_unique':cumulated_unique, 'cumulated_unique_band':cumulated_unique_band, 'page':page, 'num_pages':num_pages})
+
+
+#________________________________________________________________________________________________________
+def contestRates(request):
+    #--- Get info from form
+    search_info = request.session['cleaned_data']
+
+    #--- Retrieve contest object from pickle file
+    import ContestAnalyzerOnline.contestAnalyzer.Utils
+    contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
+    rates = contest.maxRates
+
+    rates_info = []
+    rates_info.append(["1",   rates["1min"][0],   rates["1min"][0]/1.,     rates["1min"][0]*60./1.,     str(rates["1min"][1][0]),  str(rates["1min"][1][1])])
+    rates_info.append(["5",   rates["5min"][0],   rates["5min"][0]/5.,     rates["5min"][0]*60./5.,     str(rates["5min"][1][0]),  str(rates["5min"][1][1])])
+    rates_info.append(["10",  rates["10min"][0],  rates["10min"][0]/10.,   rates["10min"][0]*60./10.,   str(rates["10min"][1][0]),  str(rates["10min"][1][1])])
+    rates_info.append(["30",  rates["30min"][0],  rates["30min"][0]/30.,   rates["30min"][0]*60./30.,   str(rates["30min"][1][0]),  str(rates["30min"][1][1])])
+    rates_info.append(["60",  rates["60min"][0],  rates["60min"][0]/60.,   rates["60min"][0]*60./60.,   str(rates["60min"][1][0]),  str(rates["60min"][1][1])])
+    rates_info.append(["120", rates["120min"][0], rates["120min"][0]/120., rates["120min"][0]*60./120., str(rates["120min"][1][0]), str(rates["120min"][1][1])])
+
+    return render(request, 'analysis_rates.html', {'rates_info':rates_info})
