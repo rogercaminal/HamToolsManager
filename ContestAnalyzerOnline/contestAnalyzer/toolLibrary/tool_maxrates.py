@@ -40,3 +40,17 @@ class tool_maxrates(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
                     ((contest.log["datetime"]>=contest.maxRates["%dmin"%mins][1][0]) & (contest.log["datetime"]<contest.maxRates["%dmin"%mins][1][1])),
                     1,
                     0)
+
+        #--- Store list of rates per minute of contest
+        listDates = list(contest.log.groupby("date").groups.keys())
+        listDates.sort()
+
+        listRates = []
+        for i, date in enumerate(listDates):
+            for h in range(24):
+                listRates.append([])
+                for m in range(60):
+                    time = "%s%s"%(str(h).zfill(2), str(m).zfill(2))
+                    counts = contest.log[(contest.log["date"]==date) & (contest.log["time"]==time)]["call"].count()
+                    listRates[h+i*24].append(counts)
+        contest.ratesPerMinute = listRates

@@ -24,6 +24,7 @@ class contest(object):
         self.logName = ""
 
         self.maxRates = {}
+        self.ratesPerMinute = []
 
     def __str__(self):
         line = ""

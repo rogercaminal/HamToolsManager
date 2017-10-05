@@ -32,12 +32,26 @@
                 <li class="mli"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:rates' %}">Rates</a></li>
+                <li class="mli"><a href="{% url 'contestAnalyzer:ratepermin' %}">Rates per minute</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band">QSOs vs time - band</a></li>
+                <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentAF">Africa</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentAS">Asia</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentEU">Europe</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentNA">North America</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentOC">Oceania</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__band___continentSA">South America</a></li>
+                </ol>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__continent">QSOs vs time - continent</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=qsos_vs_time__stationtype">QSOs vs time - station type</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=fraction__stationtype">Station type fraction</a></li>
-                <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=mults_vs_qsos">QSOs vs multipliers</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=time_vs_band_vs_continent">time vs band vs continent</a></li>
+                <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=ratio_qsos_min">Ratio of QSOs per minute</a></li>
+                <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=ratio_qsos_min___running">Running</a></li>
+                  <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=ratio_qsos_min___inband">Inband</a></li>
+                </ol>
+                <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=mults_vs_qsos">QSOs vs multipliers</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=freq_vs_time">Frequency vs time</a></li>
                 <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=call_length_morse">Morse call length</a></li>
               </ol>

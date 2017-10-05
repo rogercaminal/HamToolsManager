@@ -71,7 +71,8 @@ def process(request):
 
 
     # Generate plots
-    if doLoop:
+#    if doLoop:
+    if True:
         print "Importing plot dictionary"
         import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
         plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
@@ -333,6 +334,29 @@ def contestRates(request):
 
 
 #________________________________________________________________________________________________________
+def contestRatesPerMinute(request):
+    #--- Get info from form
+    search_info = request.session['cleaned_data']
+
+    #--- Retrieve contest object from pickle file
+    import ContestAnalyzerOnline.contestAnalyzer.Utils
+    contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
+
+    listRates = contest.ratesPerMinute
+
+    range_mins = []
+    for i in range(60):
+        range_mins.append(str(i).zfill(2))
+
+    range_hours = []
+    for i in range(24):
+        range_hours.append(str(i).zfill(2))
+    range_hours = range_hours*2
+
+    return render(request, 'analysis_rate_per_min.html', {'listRates':zip(range_hours, listRates), 'range_mins':range_mins})
+
+
+#________________________________________________________________________________________________________
 def contestPlots(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
@@ -343,14 +367,23 @@ def contestPlots(request):
 
 #ContestAnalyzerOnline/contestAnalyzer/data/cqww_2016_cw_EA2EA/plots/
     dict_plots = {}
-    dict_plots["qsos_vs_time__continent"]    = "plot_qsos_vs_time__continent"
-    dict_plots["qsos_vs_time__stationtype"]  = "plot_qsos_vs_time__stationtype"
-    dict_plots["fraction__stationtype"]      = "plot_fraction__stationtype"
-    dict_plots["qsos_vs_time__band"]         = "plot_qsos_vs_time__band"
-    dict_plots["mults_vs_qsos"]              = "plot_mults_vs_qsos"
-    dict_plots["time_vs_band_vs_continent"]  = "plot_time_vs_band_vs_continent"
-    dict_plots["freq_vs_time"]               = "plot_freq_vs_time"
-    dict_plots["call_length_morse"]          = "plot_call_length_morse"
+    dict_plots["qsos_vs_time__continent"]        = "plot_qsos_vs_time__continent"
+    dict_plots["qsos_vs_time__band"]             = "plot_qsos_vs_time__band"
+    dict_plots["qsos_vs_time__band___continentEU"] = "plot_qsos_vs_time__band___continentEU"
+    dict_plots["qsos_vs_time__band___continentAS"] = "plot_qsos_vs_time__band___continentAS"
+    dict_plots["qsos_vs_time__band___continentAF"] = "plot_qsos_vs_time__band___continentAF"
+    dict_plots["qsos_vs_time__band___continentNA"] = "plot_qsos_vs_time__band___continentNA"
+    dict_plots["qsos_vs_time__band___continentSA"] = "plot_qsos_vs_time__band___continentSA"
+    dict_plots["qsos_vs_time__band___continentOC"] = "plot_qsos_vs_time__band___continentOC"
+    dict_plots["qsos_vs_time__stationtype"]      = "plot_qsos_vs_time__stationtype"
+    dict_plots["ratio_qsos_min"]                 = "plot_ratio_qsos_min"
+    dict_plots["ratio_qsos_min___running"]       = "plot_ratio_qsos_min___running"
+    dict_plots["ratio_qsos_min___inband"]        = "plot_ratio_qsos_min___inband"
+    dict_plots["fraction__stationtype"]          = "plot_fraction__stationtype"
+    dict_plots["mults_vs_qsos"]                  = "plot_mults_vs_qsos"
+    dict_plots["time_vs_band_vs_continent"]      = "plot_time_vs_band_vs_continent"
+    dict_plots["freq_vs_time"]                   = "plot_freq_vs_time"
+    dict_plots["call_length_morse"]              = "plot_call_length_morse"
 
     plot_key = "dummie"
     if request.GET.get('chart'):
