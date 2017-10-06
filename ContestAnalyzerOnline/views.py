@@ -348,12 +348,26 @@ def contestRatesPerMinute(request):
     for i in range(60):
         range_mins.append(str(i).zfill(2))
 
+    days = contest.log.groupby("date").groups.keys()
+    days.sort()
+
     range_hours = []
     for i in range(24):
         range_hours.append(str(i).zfill(2))
-    range_hours = range_hours*2
+    range_hours = range_hours*len(days)
 
-    return render(request, 'analysis_rate_per_min.html', {'listRates':zip(range_hours, listRates), 'range_mins':range_mins})
+    range_days = []
+    for d in days:
+        range_days += [d]*24
+
+    #--- listRates is a list made of 48 sub-lists. Each sub-list has 60 rates, for each minute in each hour of the contest. Now we will convert each rate in a list of [min, rate]
+    listRates_min = []
+    for h, lh in enumerate(listRates):
+        listRates_min.append([])
+        for m, lm in enumerate(lh):
+            listRates_min[h].append([str(m).zfill(2), lm])
+
+    return render(request, 'analysis_rate_per_min.html', {'listRates':zip(range_days, range_hours, listRates_min), 'range_mins':range_mins})
 
 
 #________________________________________________________________________________________________________

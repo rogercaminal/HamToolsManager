@@ -12,36 +12,14 @@
               <th> {{ min }} </th>
               {% endfor %}
 
-              {% for hour, rate in listRates %}
+              {% for day, hour, rate in listRates %}
                 <tr class="thc">
                   <td><b>{{ hour }}</b></td>
                   {% for r in rate %}
-                    {% if r == "1" %}
-                      <td style="bgcolor=#FF0000"> {{ r }} </td>
-                    {% else %}
-                      <td> {{ r }} </td>
-                    {% endif %}
+                  <td> <a href="{% url 'contestAnalyzer:log' %}?filter=page:1,date:{{day}},time:{{hour}}{{r.0}}">{{ r.1 }}</a></td>
                   {% endfor %}
                 </tr>
               {% endfor %}
-
-
-
-              <!--             <th>QSO#</th><th>Band</th><th>Freq.</th><th>Date</th><th>Time</th><th>Callsign</th><th>Cont.</th><th>Country</th><th>CQ</th><th>Points</th>
-              {% for qso in log_info %}
-                <tr class="thc">
-                  <td>{{ qso.0 }}</td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ qso.1|floatformat }}">{{ qso.1|floatformat }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,freq:{{ qso.2 }}">{{ qso.2 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,date:{{ qso.3 }}">{{ qso.3 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,time:">{{ qso.4 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,call:{{ qso.5 }}">{{ qso.5 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,cont:{{ qso.6 }}">{{ qso.6|cut:"continent" }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,dxcc:{{ qso.7 }}">{{ qso.7 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,cq:{{ qso.8 }}">{{ qso.8 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,points:{{ qso.9 }}">{{ qso.9 }}</a></td>
-                </tr>
-                {% endfor %} -->
             </tbody>
           </table>
 
