@@ -28,7 +28,7 @@ def process(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
     contestType = search_info["name"]
-    callsign    = search_info["callsign"]
+    callsign    = search_info["callsign"].upper()
     year        = search_info["year"]
     mode        = search_info["mode"]
 

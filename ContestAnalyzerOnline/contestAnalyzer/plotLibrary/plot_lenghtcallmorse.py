@@ -2,7 +2,6 @@ import os
 import ContestAnalyzerOnline.contestAnalyzer.plotBase
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import ContestAnalyzerOnline.contestAnalyzer.morseHelper
 import plotly.offline as py
 import plotly.graph_objs as go
@@ -15,8 +14,22 @@ class plot_lenghtcallmorse(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBa
 
         mylength = int(options.replace("WPM", ""))
         mconvert = ContestAnalyzerOnline.contestAnalyzer.morseHelper.morse_converter(mylength)
+
+        mconvert.clean()
         mconvert.setString("test %s %s" % (contest.callsign, contest.callsign))
-        time_mycall = mconvert.getTime()
+        time_mycall_long = mconvert.getTime()
+
+        mconvert.clean()
+        mconvert.setString("test %s" % (contest.callsign))
+        time_mycall_short = mconvert.getTime()
+
+        mconvert.clean()
+        mconvert.setString("tu %s" % (contest.callsign))
+        time_tu = mconvert.getTime()
+
+        mconvert.clean()
+        mconvert.setString("%s 5nn" % (contest.callsign))
+        time_rst = mconvert.getTime()
 
         x = range(0, 48)
         data = [
@@ -30,7 +43,12 @@ class plot_lenghtcallmorse(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBa
             yaxis=dict(title="# QSOs"),
             width=750,
             height=750,
-            annotations=[dict(x=time_mycall, y=0, xref="x", yref="y", text=str('TEST %s %s @ %d WPM'%(contest.callsign, contest.callsign, mylength)), showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=2, ax=50, ay=-50,)]
+            annotations=[
+                dict(x=time_mycall_long, y=0, xref="x", yref="y", text=str('<b>TEST %s %s @ %d WPM</b>'%(contest.callsign, contest.callsign, mylength)), showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=2, ax=50, ay=-50,),
+                dict(x=time_mycall_short, y=0, xref="x", yref="y", text=str('<b>TEST %s @ %d WPM</b>'%(contest.callsign, mylength)), showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=2, ax=10, ay=-120,),
+                dict(x=time_tu, y=0, xref="x", yref="y", text=str('<b>TU %s @ %d WPM</b>'%(contest.callsign, mylength)), showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=2, ax=-70, ay=-150,),
+                dict(x=time_rst, y=0, xref="x", yref="y", text=str('<b>%s 5NN @ %d WPM</b>'%(contest.callsign, mylength)), showarrow=True, arrowhead=2, arrowsize=1, arrowwidth=2, ax=90, ay=-90,),
+                ]
         )
 
         fig = go.Figure(data=data, layout=layout)
