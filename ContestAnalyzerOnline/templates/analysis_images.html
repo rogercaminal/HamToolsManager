@@ -2,14 +2,6 @@
 
 {% block content %}
 
-        <div id="mdiv"><div class="gradient">&nbsp; <h1>Chart</h1> </div>
-
-          {% load static %}
-          <!-- <img src="{% static image %}" alt={{ alt }} style="width:{{width}}px;height:{{height}}px;"> -->
-          <img src="{% static image %}" alt={{ alt }}>
-
-        </div>
-
-        <!--        {{ tempplot|safe }} -->
+  {{ plot_snippet|safe }}
 
 {% endblock %}

@@ -2,32 +2,39 @@ import os
 import ContestAnalyzerOnline.contestAnalyzer.plotBase
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
+import plotly.offline as py
+import plotly.graph_objs as go
+import plotly.tools
 
 class plot_qsos_vs_time__continent(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
-    def doPlot(self, contest, doSave):
-        fig, ax = plt.subplots(1, 1, sharex=True)
-        fig.suptitle('QSOs per hour - continent', fontsize=12, fontweight='bold')
+    def doPlot(self, contest, doSave, options=""):
+        qsosEU  = contest.log[(contest.log["continent"]=="continentEU")]["hour"]
+        qsosNA  = contest.log[(contest.log["continent"]=="continentNA")]["hour"]
+        qsosSA  = contest.log[(contest.log["continent"]=="continentSA")]["hour"]
+        qsosAF  = contest.log[(contest.log["continent"]=="continentAF")]["hour"]
+        qsosOC  = contest.log[(contest.log["continent"]=="continentOC")]["hour"]
+        qsosAN  = contest.log[(contest.log["continent"]=="continentAN")]["hour"]
+        qsosAS  = contest.log[(contest.log["continent"]=="continentAS")]["hour"]
 
-        #--- Plot QSOs per hour and freq
-        qsosEU  = contest.log[contest.log["continent"]=="continentEU"]["hour"]
-        qsosNA  = contest.log[contest.log["continent"]=="continentNA"]["hour"]
-        qsosSA  = contest.log[contest.log["continent"]=="continentSA"]["hour"]
-        qsosAF  = contest.log[contest.log["continent"]=="continentAF"]["hour"]
-        qsosOC  = contest.log[contest.log["continent"]=="continentOC"]["hour"]
-        qsosAN  = contest.log[contest.log["continent"]=="continentAN"]["hour"]
-        qsosAS  = contest.log[contest.log["continent"]=="continentAS"]["hour"]
+        x = range(0, 48)
+        data = [
+                go.Histogram(x=qsosEU, name="EU", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosNA, name="NA", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosSA, name="SA", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosAF, name="AF", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosOC, name="OC", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosAN, name="AN", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsosAS, name="AS", xbins=dict(start=0, end=48, size=1), marker=dict(line=dict(width=1))),
+                ]
 
-        ax.hist([qsosAF, qsosAN, qsosAS, qsosEU, qsosNA, qsosOC, qsosSA], range(0, 48), stacked=True, label=["AF", "AN", "AS", "EU", "NA", "OC", "SA"])
-        ax.set_xlabel("# QSOs")
-        ax.set_xlim([0, 47])
-        ax.set_ylabel("Hour")
-        ax.legend(prop={'size':10}, loc=1, ncol=4)
+        layout = go.Layout(
+            barmode='stack',
+            title='QSOs per hour - continent',
+            xaxis=dict(title="Hour", nticks=24),
+            yaxis=dict(title="QSOs"),
+            width=750,
+            height=750,
+        )
 
-        print("Number of QSOs per hour, separated by continent.")
-        
-        if not doSave:
-            plt.show()
-        else:
-            fig.savefig(contest.folderToSave+"plot_qsos_vs_time__continent.png", bbox_inches='tight')
-
+        fig = go.Figure(data=data, layout=layout)
+        return py.plot(fig, auto_open=False, output_type='div')

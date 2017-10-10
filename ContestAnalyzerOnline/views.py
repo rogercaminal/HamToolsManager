@@ -72,12 +72,11 @@ def process(request):
 
     # Generate plots
 #    if doLoop:
-    if True:
-        print "Importing plot dictionary"
-        import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
-        plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
-        for plot in plotDict.names():
-            plotDict.plots()[plot].doPlot(contest=contest, doSave=True)
+#        print "Importing plot dictionary"
+#        import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
+#        plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
+#        for plot in plotDict.names():
+#            plotDict.plots()[plot].doPlot(contest=contest, doSave=True)
 
 
 #    return render(request, 'analysis_main.html', {'contest': contest})
@@ -379,31 +378,41 @@ def contestPlots(request):
     import ContestAnalyzerOnline.contestAnalyzer.Utils
     contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
 
-#ContestAnalyzerOnline/contestAnalyzer/data/cqww_2016_cw_EA2EA/plots/
-    dict_plots = {}
-    dict_plots["qsos_vs_time__continent"]        = "plot_qsos_vs_time__continent"
-    dict_plots["qsos_vs_time__band"]             = "plot_qsos_vs_time__band"
-    dict_plots["qsos_vs_time__band___continentEU"] = "plot_qsos_vs_time__band___continentEU"
-    dict_plots["qsos_vs_time__band___continentAS"] = "plot_qsos_vs_time__band___continentAS"
-    dict_plots["qsos_vs_time__band___continentAF"] = "plot_qsos_vs_time__band___continentAF"
-    dict_plots["qsos_vs_time__band___continentNA"] = "plot_qsos_vs_time__band___continentNA"
-    dict_plots["qsos_vs_time__band___continentSA"] = "plot_qsos_vs_time__band___continentSA"
-    dict_plots["qsos_vs_time__band___continentOC"] = "plot_qsos_vs_time__band___continentOC"
-    dict_plots["qsos_vs_time__stationtype"]      = "plot_qsos_vs_time__stationtype"
-    dict_plots["ratio_qsos_min"]                 = "plot_ratio_qsos_min"
-    dict_plots["ratio_qsos_min___running"]       = "plot_ratio_qsos_min___running"
-    dict_plots["ratio_qsos_min___inband"]        = "plot_ratio_qsos_min___inband"
-    dict_plots["fraction__stationtype"]          = "plot_fraction__stationtype"
-    dict_plots["mults_vs_qsos"]                  = "plot_mults_vs_qsos"
-    dict_plots["time_vs_band_vs_continent"]      = "plot_time_vs_band_vs_continent"
-    dict_plots["freq_vs_time"]                   = "plot_freq_vs_time"
-    dict_plots["call_length_morse"]              = "plot_call_length_morse"
-
+##ContestAnalyzerOnline/contestAnalyzer/data/cqww_2016_cw_EA2EA/plots/
+#    dict_plots = {}
+#    dict_plots["qsos_vs_time__continent"]        = "plot_qsos_vs_time__continent"
+#    dict_plots["qsos_vs_time__band"]             = "plot_qsos_vs_time__band"
+#    dict_plots["qsos_vs_time__band___continentEU"] = "plot_qsos_vs_time__band___continentEU"
+#    dict_plots["qsos_vs_time__band___continentAS"] = "plot_qsos_vs_time__band___continentAS"
+#    dict_plots["qsos_vs_time__band___continentAF"] = "plot_qsos_vs_time__band___continentAF"
+#    dict_plots["qsos_vs_time__band___continentNA"] = "plot_qsos_vs_time__band___continentNA"
+#    dict_plots["qsos_vs_time__band___continentSA"] = "plot_qsos_vs_time__band___continentSA"
+#    dict_plots["qsos_vs_time__band___continentOC"] = "plot_qsos_vs_time__band___continentOC"
+#    dict_plots["qsos_vs_time__stationtype"]      = "plot_qsos_vs_time__stationtype"
+#    dict_plots["ratio_qsos_min"]                 = "plot_ratio_qsos_min"
+#    dict_plots["ratio_qsos_min___running"]       = "plot_ratio_qsos_min___running"
+#    dict_plots["ratio_qsos_min___inband"]        = "plot_ratio_qsos_min___inband"
+#    dict_plots["fraction__stationtype"]          = "plot_fraction__stationtype"
+#    dict_plots["mults_vs_qsos"]                  = "plot_mults_vs_qsos"
+#    dict_plots["time_vs_band_vs_continent"]      = "plot_time_vs_band_vs_continent"
+#    dict_plots["freq_vs_time"]                   = "plot_freq_vs_time"
+#    dict_plots["call_length_morse"]              = "plot_call_length_morse"
+#
     plot_key = "dummie"
     if request.GET.get('chart'):
         plot_key = str(request.GET.get('chart'))
 
-    path = str("cqww_%s_%s_%s" % (contest.year, contest.cat_mode.lower(), contest.callsign))
-    image = ["%s/plots/%s.png"%(path, dict_plots[plot_key]), dict_plots[plot_key], "500", "500"]
+    options  = ""
+    if request.GET.get('options'):
+        options = str(request.GET.get('options'))
 
-    return render(request, 'analysis_images.html', {'image':image[0], 'alt':image[1], 'width':image[2], 'height':image[3]})
+    import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
+    plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
+    # ['plot_qsos_vs_time__band', 'plot_qsos_vs_time__continent', 'plot_qsos_vs_time__stationtype', 'plot_fraction_stationtype', 'plot_ratio_qsos_min', 'plot_mults_vs_qsos', 'plot_time_vs_band_vs_continent', 'plot_freq_vs_date', 'plot_lenghtcallmorse', 'plot_qsos_vs_time__band___continent']
+    plot_snippet = ""
+    for plot in plotDict.names():
+        print plot, plot_key
+        if plot==plot_key:
+            plot_snippet = plotDict.plots()[plot_key].doPlot(contest=contest, doSave=True, options=options)
+
+    return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet})

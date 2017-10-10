@@ -7,5 +7,5 @@ class plotBase(object):
     def __str__(self):
         return m_name
 
-    def doPlot(self, contest, doSave):
+    def doPlot(self, contest, doSave, options=""):
         pass
