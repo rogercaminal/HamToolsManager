@@ -1,0 +1,26 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <title>Contest analyzer online</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css">
+    <link rel="stylesheet" href="{% static 'css/master.css' %}">
+
+    <meta http-equiv="refresh" content="1; URL={% url 'contestAnalyzer:process' %}">
+  </head>
+
+  <body>
+
+    <p> Processing! </p>
+
+  </body>
+
+</html>

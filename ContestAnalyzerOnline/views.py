@@ -16,7 +16,8 @@ def index(request):
         form = ContestForm(request.POST)
         if form.is_valid():
             request.session['cleaned_data'] = form.cleaned_data
-            return redirect('contestAnalyzer:process')
+            #return redirect('contestAnalyzer:process')
+            return render(request, 'processing.html', {'form': form})
     else:
         form = ContestForm()
 
