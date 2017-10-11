@@ -21,14 +21,14 @@ class plot_ratio_qsos_min(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBas
             qsos_day2  = contest.log[(contest.log["isdupe"]==False) & (contest.log["date"]==contest.log["date"].iloc[-1]) & (contest.log["station_type"]=="inband")]["datetime"].value_counts()
 
         data = [
-                go.Histogram(x=list(qsos_day2), name="Day 2", xbins=dict(start=1, end=15, size=1), marker=dict(line=dict(width=1))),
-                go.Histogram(x=list(qsos_day1), name="Day 1", xbins=dict(start=1, end=15, size=1), marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsos_day2, name="Day 2", xbins=dict(start=1, end=15, size=1), autobinx=False, marker=dict(line=dict(width=1))),
+                go.Histogram(x=qsos_day1, name="Day 1", xbins=dict(start=1, end=15, size=1), autobinx=False, marker=dict(line=dict(width=1))),
                 ]
 
         layout = go.Layout(
             barmode='stack',
             title='QSOs per min',
-            xaxis=dict(title="QSOs/min"),
+            xaxis=dict(title="QSOs/min", tickvals=range(1, 15)),
             yaxis=dict(title="Number of times"),
             width=750,
             height=750,

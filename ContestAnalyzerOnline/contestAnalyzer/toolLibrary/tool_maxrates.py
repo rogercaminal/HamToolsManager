@@ -16,9 +16,7 @@ class tool_maxrates(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
             return r
 
         #--- Get initial and final times
-        time_start = contest.log["datetime"].iloc[0]
-        time_end = contest.log["datetime"].iloc[-1]
-        date_range = daterange(time_start, time_end)
+        date_range = daterange(pd.to_datetime("%s 00:00:00"%contest.log["date"].iloc[0]), pd.to_datetime("%s 23:59:00"%contest.log["date"].iloc[-1]))
 
         #--- Steps to compute
         steps = [1, 5, 10, 30, 60, 120]

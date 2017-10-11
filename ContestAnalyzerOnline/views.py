@@ -125,14 +125,24 @@ def contestSummary(request):
         dxcc_cumul   += dxcc
         zones_cumul  += zones
         points_cumul += points
-        summary_info.append([
-            band,
-            qsos,
-            dxcc,
-            zones,
-            points,
-            float(points)/qsos,
-            ])
+        if qsos>0:
+            summary_info.append([
+                band,
+                qsos,
+                dxcc,
+                zones,
+                points,
+                float(points)/qsos,
+                ])
+        else:
+            summary_info.append([
+                band,
+                qsos,
+                dxcc,
+                zones,
+                points,
+                0.,
+                ])
     summary_info_total.append([
         "Total",
         qsos_cumul,

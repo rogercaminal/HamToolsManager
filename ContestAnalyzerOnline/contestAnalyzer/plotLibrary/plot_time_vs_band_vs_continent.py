@@ -32,12 +32,12 @@ class plot_time_vs_band_vs_continent(ContestAnalyzerOnline.contestAnalyzer.plotB
         maximum = max(max_AF, max(max_AS, max(max_EU, max(max_NA, max(max_SA, max_OC)))))
 
         data = [
-                go.Histogram2d(x=hoursAF_list, y=bandsAF_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
-                go.Histogram2d(x=hoursAS_list, y=bandsAS_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
-                go.Histogram2d(x=hoursEU_list, y=bandsEU_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
-                go.Histogram2d(x=hoursNA_list, y=bandsNA_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
-                go.Histogram2d(x=hoursSA_list, y=bandsSA_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
-                go.Histogram2d(x=hoursOC_list, y=bandsOC_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=0, end=6, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursAF_list, y=bandsAF_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursAS_list, y=bandsAS_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursEU_list, y=bandsEU_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursNA_list, y=bandsNA_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursSA_list, y=bandsSA_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
+                go.Histogram2d(x=hoursOC_list, y=bandsOC_list, xbins=dict(start=0, end=48, size=1), ybins=dict(start=1, end=7, size=1), zmin=0, zmax=maximum, hoverinfo="x+y+z"),
                 ]
 
         fig = plotly.tools.make_subplots(rows=3, cols=2, subplot_titles=("AF", "AS", "EU", "NA", "SA", "OC"))
@@ -55,12 +55,12 @@ class plot_time_vs_band_vs_continent(ContestAnalyzerOnline.contestAnalyzer.plotB
                 xaxis4=dict(title="Hour", nticks=24),
                 xaxis5=dict(title="Hour", nticks=24),
                 xaxis6=dict(title="Hour", nticks=24),
-                yaxis1=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
-                yaxis2=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
-                yaxis3=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
-                yaxis4=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
-                yaxis5=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
-                yaxis6=dict(title="Band", tickmode="array", tickvals=range(0, 6), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis1=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis2=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis3=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis4=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis5=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
+                yaxis6=dict(title="Band", tickmode="array", tickvals=range(1, 7), ticktext=["10m", "15m", "20m", "40m", "80m", "160m"]),
                 width=750,
                 height=750,
                 )
