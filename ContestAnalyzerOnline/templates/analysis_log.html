@@ -2,16 +2,68 @@
 
 {% block content %}
 
-        <div id="mdiv"><div class="gradient">&nbsp; <h1>Log</h1> </div>
-        pages:
-        {% for i in num_pages %}
-          {% if i == page %}
-            <b>{{ i }}</b>
-          {% else %}
-          <a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ i }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ i }}</a>
-          {% endif %}
-        {% endfor %}
+<!-- Pagination -->
+        <div class="container-fluid text-center">
 
+          <ul class="pagination">
+
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:1,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">&#60;&#60;</a></li>
+
+            {% if page == 1 %}
+              <li class="disabled"><a href="#">&#60;</a></li>
+            {% else %}
+            <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{page|add:-1}},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">&#60;</a></li>
+            {% endif %}
+
+            {% if page == 1 %}
+              <li class="active"><a href="{% url 'contestAnalyzer:log' %}/?filter=page:1,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">1</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:2,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">2</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:3,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">3</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:4,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">4</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:5,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">5</a></li>
+
+            {% elif page == 2 %}
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:1,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">1</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:log' %}/?filter=page:2,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">2</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:3,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">3</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:4,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">4</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:5,{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">5</a></li>
+
+            {% elif page == total_pages|add:-1 %}
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-4 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-4 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-3 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-3 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-2 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-2 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-1 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-1 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages }}</a></li>
+
+            {% elif page == total_pages %}
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-4 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-4 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-3 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-3 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-2 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-2 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages|add:-1 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages|add:-1 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ total_pages }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ total_pages }}</a></li>
+
+            {% else %}
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ page|add:-2 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ page|add:-2 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ page|add:-1 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ page|add:-1 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ page }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ page }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ page|add:1 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ page|add:1 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{ page|add:2 }},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">{{ page|add:2 }}</a></li>
+            {% endif %}
+
+            {% if page == total_pages %}
+              <li class="disabled"><a href="#">&#62;</a></li>
+            {% else %}
+              <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{page|add:1}},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">&#62;</a></li>
+            {% endif %}
+
+            <li><a href="{% url 'contestAnalyzer:log' %}/?filter=page:{{total_pages}},{{ cumulated_info }}&unique={{ cumulated_unique }}&unique_band={{cumulated_unique_band}}">&#62;&#62;</a></li>
+
+          </ul>
+        </div>
+
+<!-- Table -->
+        <div class="container-fluid text-left">
           <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
             <colgroup> <col width="200px"> <col> </colgroup>
             <tbody>
