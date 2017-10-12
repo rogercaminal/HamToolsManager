@@ -16,7 +16,8 @@ def index(request):
         form = ContestForm(request.POST)
         if form.is_valid():
             request.session['cleaned_data'] = form.cleaned_data
-            #return redirect('contestAnalyzer:process')
+            if "new_callsign" in request.session.keys():
+                del request.session['new_callsign']
             return render(request, 'processing.html', {'form': form})
     else:
         form = ContestForm()
@@ -33,6 +34,11 @@ def process(request):
     year        = search_info["year"]
     mode        = search_info["mode"]
 
+    #--- Get call from availablecalls.html page. Store it in new_callsign so that it's available everywhere.
+    if request.GET.get('call'):
+        callsign = str(request.GET.get('call'))
+        request.session['new_callsign'] = callsign
+
     #--- Download log and process it
     import ContestAnalyzerOnline.contestAnalyzer.contest_master
     import ContestAnalyzerOnline.contestAnalyzer.Utils
@@ -40,7 +46,24 @@ def process(request):
     contest.logName = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contestType, year, mode, callsign, contestType, year, mode, callsign)
     contest.folderToSave = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign)
     contest.year = year
-    doLoop = ContestAnalyzerOnline.contestAnalyzer.Utils.importLog(contest=contest, contestType=contestType, year=year, mode=mode, callsign=callsign, forceCSV=False)
+    isgood, doLoop = ContestAnalyzerOnline.contestAnalyzer.Utils.importLog(contest=contest, contestType=contestType, year=year, mode=mode, callsign=callsign, forceCSV=False)
+
+    if not isgood:
+        from string import ascii_uppercase
+        listOfCalls = ContestAnalyzerOnline.contestAnalyzer.Utils.getListOfLogs(contestType=contestType, year=year, mode=mode)
+        listOfCalls.sort()
+        callsDict = {}
+        for number in range(1,10):
+            callsDict[str(number)] = []
+            for call in listOfCalls:
+                if call[0]==str(number):
+                    callsDict[str(number)].append(call)
+        for letter in ascii_uppercase:
+            callsDict[letter] = []
+            for call in listOfCalls:
+                if call[0]==letter:
+                    callsDict[letter].append(call)
+        return render(request, 'analysis_availablecalls.html', {'contest': contest, 'callsDict':sorted(callsDict.items())})
 
     if doLoop:
         # Get toolDictionary, with the tools to be applied.
@@ -87,18 +110,22 @@ def process(request):
 def mainPage(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
     contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
 
-    return render(request, 'analysis_main.html', {'contest': contest})
+    return render(request, 'analysis_main.html', {'contest': contest, 'nbar':'main'})
 
 
 #________________________________________________________________________________________________________
 def contestSummary(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
@@ -154,13 +181,15 @@ def contestSummary(request):
         (zones_cumul+dxcc_cumul)*points_cumul
         ])
 
-    return render(request, 'analysis_summary.html', {'summary_info':summary_info, 'summary_info_total':summary_info_total})
+    return render(request, 'analysis_summary.html', {'summary_info':summary_info, 'summary_info_total':summary_info_total, 'nbar':'summary'})
 
 
 #________________________________________________________________________________________________________
 def contestLog(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
@@ -319,13 +348,15 @@ def contestLog(request):
             row["points"],
             ])
 
-    return render(request, 'analysis_log.html', {"log_info":log_info ,'cumulated_info':cumulated_info, 'cumulated_unique':cumulated_unique, 'cumulated_unique_band':cumulated_unique_band, 'page':page, 'num_pages':num_pages, 'total_pages':len(num_pages)})
+    return render(request, 'analysis_log.html', {"log_info":log_info ,'cumulated_info':cumulated_info, 'cumulated_unique':cumulated_unique, 'cumulated_unique_band':cumulated_unique_band, 'page':page, 'num_pages':num_pages, 'total_pages':len(num_pages), 'nbar':'log'})
 
 
 #________________________________________________________________________________________________________
 def contestRates(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
@@ -340,13 +371,15 @@ def contestRates(request):
     rates_info.append(["60",  rates["60min"][0],  rates["60min"][0]/60.,   rates["60min"][0]*60./60.,   str(rates["60min"][1][0]),  str(rates["60min"][1][1])])
     rates_info.append(["120", rates["120min"][0], rates["120min"][0]/120., rates["120min"][0]*60./120., str(rates["120min"][1][0]), str(rates["120min"][1][1])])
 
-    return render(request, 'analysis_rates.html', {'rates_info':rates_info})
+    return render(request, 'analysis_rates.html', {'rates_info':rates_info, 'nbar':'rates'})
 
 
 #________________________________________________________________________________________________________
 def contestRatesPerMinute(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
@@ -377,38 +410,21 @@ def contestRatesPerMinute(request):
         for m, lm in enumerate(lh):
             listRates_min[h].append([str(m).zfill(2), lm])
 
-    return render(request, 'analysis_rate_per_min.html', {'listRates':zip(range_days, range_hours, listRates_min), 'range_mins':range_mins})
+    return render(request, 'analysis_rate_per_min.html', {'listRates':zip(range_days, range_hours, listRates_min), 'range_mins':range_mins, 'nbar':'rates'})
 
 
 #________________________________________________________________________________________________________
 def contestPlots(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
     import ContestAnalyzerOnline.contestAnalyzer.Utils
     contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
 
-##ContestAnalyzerOnline/contestAnalyzer/data/cqww_2016_cw_EA2EA/plots/
-#    dict_plots = {}
-#    dict_plots["qsos_vs_time__continent"]        = "plot_qsos_vs_time__continent"
-#    dict_plots["qsos_vs_time__band"]             = "plot_qsos_vs_time__band"
-#    dict_plots["qsos_vs_time__band___continentEU"] = "plot_qsos_vs_time__band___continentEU"
-#    dict_plots["qsos_vs_time__band___continentAS"] = "plot_qsos_vs_time__band___continentAS"
-#    dict_plots["qsos_vs_time__band___continentAF"] = "plot_qsos_vs_time__band___continentAF"
-#    dict_plots["qsos_vs_time__band___continentNA"] = "plot_qsos_vs_time__band___continentNA"
-#    dict_plots["qsos_vs_time__band___continentSA"] = "plot_qsos_vs_time__band___continentSA"
-#    dict_plots["qsos_vs_time__band___continentOC"] = "plot_qsos_vs_time__band___continentOC"
-#    dict_plots["qsos_vs_time__stationtype"]      = "plot_qsos_vs_time__stationtype"
-#    dict_plots["ratio_qsos_min"]                 = "plot_ratio_qsos_min"
-#    dict_plots["ratio_qsos_min___running"]       = "plot_ratio_qsos_min___running"
-#    dict_plots["ratio_qsos_min___inband"]        = "plot_ratio_qsos_min___inband"
-#    dict_plots["fraction__stationtype"]          = "plot_fraction__stationtype"
-#    dict_plots["mults_vs_qsos"]                  = "plot_mults_vs_qsos"
-#    dict_plots["time_vs_band_vs_continent"]      = "plot_time_vs_band_vs_continent"
-#    dict_plots["freq_vs_time"]                   = "plot_freq_vs_time"
-#    dict_plots["call_length_morse"]              = "plot_call_length_morse"
-#
+    #--- Get keys from link
     plot_key = "dummie"
     if request.GET.get('chart'):
         plot_key = str(request.GET.get('chart'))
@@ -417,13 +433,46 @@ def contestPlots(request):
     if request.GET.get('options'):
         options = str(request.GET.get('options'))
 
+    #--- Generate code to inject to html
     import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
     plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
-    # ['plot_qsos_vs_time__band', 'plot_qsos_vs_time__continent', 'plot_qsos_vs_time__stationtype', 'plot_fraction_stationtype', 'plot_ratio_qsos_min', 'plot_mults_vs_qsos', 'plot_time_vs_band_vs_continent', 'plot_freq_vs_date', 'plot_lenghtcallmorse', 'plot_qsos_vs_time__band___continent']
     plot_snippet = ""
     for plot in plotDict.names():
         print plot, plot_key
         if plot==plot_key:
             plot_snippet = plotDict.plots()[plot_key].doPlot(contest=contest, doSave=True, options=options)
 
-    return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet})
+    #--- Mark active block in html
+    nbar=""
+    if plot_key=='plot_qsos_vs_time__band':
+        nbar="qsoshour"
+    if plot_key=='plot_qsos_vs_time__continent':
+        nbar="qsoshour"
+    if plot_key=='plot_qsos_vs_time__stationtype':
+        nbar="qsoshour"
+    if plot_key=='plot_fraction_stationtype':
+        nbar="miscellania"
+    if plot_key=='plot_ratio_qsos_min':
+        nbar="miscellania"
+    if plot_key=='plot_mults_vs_qsos':
+        nbar="evolution"
+    if plot_key=='plot_time_vs_band_vs_continent':
+        nbar="qsoshour"
+    if plot_key=='plot_freq_vs_date':
+        nbar="evolution"
+    if plot_key=='plot_lenghtcallmorse':
+        nbar="morse"
+
+    #--- Lateral bar
+    latbar = ""
+    if "plot_qsos_vs_time__band" in plot_key:
+        latbar = "qsos_vs_time__band"
+    if "plot_ratio_qsos_min" in plot_key:
+        latbar = "ratio_qsos_min"
+
+    return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar})
+
+
+#________________________________________________________________________________________________________
+def aboutMe(request):
+    return HttpResponse("Info about me")

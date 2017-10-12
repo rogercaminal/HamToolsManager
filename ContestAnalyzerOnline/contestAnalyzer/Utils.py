@@ -20,15 +20,20 @@ dict_types["ismult"]    = np.int64
 
 #____________________________________________________________________________________________________________
 def getLog(contestType, callsign, year, mode):
-    response = None
-    if contestType=="cqww":
-        print('Getting the log from http://www.cqww.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
-        response = urlopen("http://www.cqww.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))    
-    elif contestType=="cqwpx":
-        print('Getting the log from http://www.cqwpx.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
-        response = urlopen("http://www.cqwpx.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))    
-    html = response.read()
-    return html
+    isgood = False
+    try:
+        response = None
+        if contestType=="cqww":
+            print('Getting the log from http://www.cqww.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
+            response = urlopen("http://www.cqww.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))
+        elif contestType=="cqwpx":
+            print('Getting the log from http://www.cqwpx.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
+            response = urlopen("http://www.cqwpx.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))
+        html = response.read()
+        isgood = True
+        return isgood, html
+    except:
+        return isgood, str("")
 
 
 #____________________________________________________________________________________________________________
@@ -87,11 +92,10 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))
 
         #--- Download log file from web
-        downloadedlog = ""
-        try:
-            downloadedlog = getLog(contestType, callsign, year, mode)
-        except:
-            print("Log not found!")
+        isgood, downloadedlog = getLog(contestType, callsign, year, mode)
+        if not isgood:
+            return isgood, False
+
         infile = open(contest.logName, "wb")
         infile.write(downloadedlog)
         infile.close()
@@ -124,9 +128,9 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
         infile.close()
         os.remove(contest.logName)
 
-        return True
+        return isgood, True
 
-    return False
+    return True, False
 
 
 #________________________________________________________________________________________________________

@@ -32,19 +32,39 @@
         </div>
         <div class="collapse navbar-collapse" id="myNavbar">
           <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#">Bleble</a></li>
-            <li><a href="#">Blibli</a></li>
-            <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Page 1 <span class="caret"></span></a>
+            <li class="{%if nbar == 'main' %}active{%endif%}"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
+            <li class="{%if nbar == 'summary' %}active{%endif%}"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
+            <li class="{%if nbar == 'log' %}active{%endif%}"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
+            <li class="dropdown{%if nbar == 'rates' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Rate <span class="caret"></span></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Page 1-1</a></li>
-                <li><a href="#">Page 1-2</a></li>
-                <li><a href="#">Page 1-3</a></li>
+                <li><a href="{% url 'contestAnalyzer:rates' %}">Maximum rates</a></li>
+                <li><a href="{% url 'contestAnalyzer:ratepermin' %}">Rates for each minute</a></li>
               </ul>
             </li>
+            <li class="dropdown{%if nbar == 'qsoshour' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">QSOs per hour <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band">Band</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__continent">Continent</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__stationtype">Station type</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_time_vs_band_vs_continent">Band and continent</a></li>
+              </ul>
+            </li>
+            <li class="dropdown{%if nbar == 'evolution' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Evolution <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_freq_vs_date">TX frequency evolution</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_mults_vs_qsos">Multipliers evolution per QSO</a></li>
+              </ul>
+            </li>
+            <li class="dropdown{%if nbar == 'miscellania' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Miscellania <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_fraction_stationtype">Station type fraction</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=all">QSOs per minute rate</a></li>
+              </ul>
+            </li>
+            <li class="{%if nbar == 'morse' %}active{%endif%}"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_lenghtcallmorse;options=35WPM">CW</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Help</a></li>
+            <li><a href="{% url 'contestAnalyzer:aboutme' %}">About me</a></li>
           </ul>
         </div>
       </div>
@@ -55,46 +75,21 @@
     <div class="container-fluid text-left">
       <div class="row content">
         <div class="col-sm-2 sidenav">
-
-          <table class="ta1" cellspacing="0" cellpadding="top">
-            <tbody>
-              <tr>
-
-                <td class="no-print" style="width:17%" valign="top">
-                  <div style="width:220px;" class="mdv">
-                    <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
-                      <li class="mli"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:rates' %}">Rates</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:ratepermin' %}">Rates per minute</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band">QSOs vs time - band</a></li>
-                      <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAF">Africa</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAS">Asia</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentEU">Europe</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentNA">North America</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentOC">Oceania</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentSA">South America</a></li>
-                      </ol>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__continent">QSOs vs time - continent</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__stationtype">QSOs vs time - station type</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_fraction_stationtype">Station type fraction</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_time_vs_band_vs_continent">time vs band vs continent</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=all">Ratio of QSOs per minute</a></li>
-                      <ol style="margin-top:0px;margin-bottom:0px;margin-left:0px">
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=running">Running</a></li>
-                        <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=inband">Inband</a></li>
-                      </ol>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_mults_vs_qsos">QSOs vs multipliers</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_freq_vs_date">Frequency vs time</a></li>
-                      <li class="mli"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_lenghtcallmorse;options=35WPM">Morse call length</a></li>
-                    </ol>
-                  </div>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+          <ul class="list-unstyled">
+              {% if latbar == 'qsos_vs_time__band' %}
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band">All continents</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAF">Africa</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAS">Asia</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentEU">Europe</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentNA">North America</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentOC">Oceania</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentSA">South America</a></li>
+              {% elif latbar == 'ratio_qsos_min' %}
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min">All</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=running">Running</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=inband">Inband</a></li>
+              {% endif %}
+          </ul>
         </div>
         <div class="col-sm-8 text-left">
 
@@ -104,7 +99,6 @@
         </div>
       </div>
     </div>
-
 
     <footer style="text-align: center">
       <p> &copy; created by EA3ALZ </p>
