@@ -48,7 +48,7 @@ class plot_time_vs_band_vs_continent(ContestAnalyzerOnline.contestAnalyzer.plotB
         fig.append_trace(data[4], 3, 1)
         fig.append_trace(data[5], 3, 2)
         fig["layout"].update(
-                title='Stacked Bar with Pandas',
+                title='Band vs time for each continent',
                 xaxis1=dict(title="Hour", nticks=24),
                 xaxis2=dict(title="Hour", nticks=24),
                 xaxis3=dict(title="Hour", nticks=24),

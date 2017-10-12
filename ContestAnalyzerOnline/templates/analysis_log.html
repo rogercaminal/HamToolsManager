@@ -64,10 +64,12 @@
 
 <!-- Table -->
         <div class="container-fluid text-left">
-          <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
-            <colgroup> <col width="200px"> <col> </colgroup>
-            <tbody>
+          <h1>Log</h1>
+          <table class="table table-hover table-responsive">
+            <thead>
               <th>QSO#</th><th>Band</th><th>Freq.</th><th>Date</th><th>Time</th><th>Callsign</th><th>Cont.</th><th>Country</th><th>CQ</th><th>Points</th>
+            </thead>
+            <tbody>
               {% for qso in log_info %}
                 <tr class="thc">
                   <td>{{ qso.0 }}</td>
