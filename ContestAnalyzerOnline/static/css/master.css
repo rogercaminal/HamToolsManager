@@ -23,11 +23,21 @@ background-color: yellow;
   height: 100%;
 }
 
+/* Settings for the body */
+body {
+    padding-top: 65px;
+    padding-bottom: 50px;
+}
+
 /* Set black background color, white text and some padding */
 footer {
   background-color: #555;
   color: white;
-  padding: 15px;
+  padding: 10px;
+  position: fixed;
+  height: 40px;
+  bottom: 0;
+  width: 100%;
 }
 
 /* On small screens, set height to 'auto' for sidenav and grid */
@@ -38,3 +48,4 @@ footer {
   }
   .row.content {height:auto;} 
 }
+
