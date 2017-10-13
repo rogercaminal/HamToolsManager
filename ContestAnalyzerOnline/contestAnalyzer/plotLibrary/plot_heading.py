@@ -13,7 +13,7 @@ class plot_heading(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
         counts_inband = []
         counts_multi = []
         directions = []
-        binsize = 30
+        binsize = 10
         for direction in range(0, 360, binsize):
             directions.append(direction)
 
@@ -40,6 +40,7 @@ class plot_heading(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
             legend=dict(font=(dict(size=16))),
             width=750,
             height=750,
+            angularaxis=dict(showticklabels=True)
                 )
 
         fig = go.Figure(data=data, layout=layout)

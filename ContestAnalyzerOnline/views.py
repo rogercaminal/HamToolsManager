@@ -497,7 +497,7 @@ def maps(request):
     lat = list(k[1] for k in list_calls_unique)
     lon = list(k[2] for k in list_calls_unique)
 
-    return render(request, 'analysis_maps.html', {'list_calls':zip(calls, lat, lon)})
+    return render(request, 'analysis_maps.html', {'nbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0]})
 
 #________________________________________________________________________________________________________
 def aboutMe(request):
