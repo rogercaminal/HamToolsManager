@@ -76,7 +76,7 @@
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,band:{{ qso.1|floatformat }}">{{ qso.1|floatformat }}</a></td>
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,freq:{{ qso.2 }}">{{ qso.2 }}</a></td>
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,date:{{ qso.3 }}">{{ qso.3 }}</a></td>
-                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,time:">{{ qso.4 }}</a></td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,time:{{ qso.4 }}">{{ qso.4 }}</a></td>
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,call:{{ qso.5 }}">{{ qso.5 }}</a></td>
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,cont:{{ qso.6 }}">{{ qso.6|cut:"continent" }}</a></td>
                   <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,dxcc:{{ qso.7 }}">{{ qso.7 }}</a></td>

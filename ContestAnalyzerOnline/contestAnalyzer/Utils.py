@@ -58,22 +58,25 @@ def getListOfLogs(contestType, year, mode):
 
 #____________________________________________________________________________________________________________
 def getListOfYears(contestType):
-    response = None
-    if contestType=="cqww":
-        response = urlopen("http://www.cqww.com/publiclogs/")
-    elif contestType=="cqwpx":
-        response = urlopen("http://www.cqwpx.com/publiclogs/")
-    html = str(response.read())
+    try:
+        response = None
+        if contestType=="cqww":
+            response = urlopen("http://www.cqww.com/publiclogs/")
+        elif contestType=="cqwpx":
+            response = urlopen("http://www.cqwpx.com/publiclogs/")
+        html = str(response.read())
 
-    years = []
-    for l in html.split("\n"):
-        if "View CQ W" in l:
-            year = l.split()[5]
-            if year not in years:
-                years.append(year)
+        years = []
+        for l in html.split("\n"):
+            if "View CQ W" in l:
+                year = l.split()[5]
+                if year not in years:
+                    years.append(year)
 
-    years.sort()
-    return years
+        years.sort()
+        return years
+    except:
+        return ["2016"]
 
 
 #________________________________________________________________________________________________________

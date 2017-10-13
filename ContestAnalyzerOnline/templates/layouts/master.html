@@ -16,6 +16,13 @@
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    <style>
+      #map {
+        height: 500px;
+        width: 100%;
+      }
+    </style>
   </head>
 
   <body>
@@ -39,6 +46,7 @@
               <ul class="dropdown-menu">
                 <li><a href="{% url 'contestAnalyzer:rates' %}">Maximum rates</a></li>
                 <li><a href="{% url 'contestAnalyzer:ratepermin' %}">Rates for each minute</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=all">QSOs per minute rate</a></li>
               </ul>
             </li>
             <li class="dropdown{%if nbar == 'qsoshour' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">QSOs per hour <span class="caret"></span></a>
@@ -58,10 +66,11 @@
             <li class="dropdown{%if nbar == 'miscellania' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Miscellania <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_fraction_stationtype">Station type fraction</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=all">QSOs per minute rate</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading">Beam direction</a></li>
               </ul>
             </li>
             <li class="{%if nbar == 'morse' %}active{%endif%}"><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_lenghtcallmorse;options=35WPM">CW</a></li>
+            <li class="{%if nbar == 'maps' %}active{%endif%}"><a href="{% url 'contestAnalyzer:maps' %}">Map</a></li>
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="{% url 'contestAnalyzer:aboutme' %}">About me</a></li>
@@ -88,6 +97,14 @@
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min">All</a></li>
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=running">Running</a></li>
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=inband">Inband</a></li>
+              {% elif latbar == 'heading' %}
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading">All</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band10">10 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band15">15 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band20">20 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band40">40 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band80">80 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band160">160 m</a></li>
               {% endif %}
           </ul>
         </div>

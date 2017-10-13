@@ -1,0 +1,33 @@
+{% extends "layouts/master.html" %}
+
+{% block content %}
+
+
+<div class="container-fluid text-left">
+  <h1>Map</h1>
+
+  <div id="map"></div>
+  <h1></h1>
+ 
+  <script>
+function initMap() {
+  var myLatLng = {lat: 50, lng: 0};
+
+  var map = new google.maps.Map(document.getElementById('map'), {
+    zoom: 2,
+    center: myLatLng
+  });
+
+  {% for call, lat, lng in list_calls %}
+  var marker = new google.maps.Marker({ position: {lat: {{lat}}, lng: {{lng}}}, map: map, title:"{{call}}" });
+  {% endfor %}
+
+}
+  </script>
+
+  <script async defer
+       src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDEMqY3KIF3Tpu6eBe0hy-xVh_kXmbcu5k&callback=initMap">
+  </script>
+</div>
+
+{% endblock %}

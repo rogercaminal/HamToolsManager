@@ -453,7 +453,7 @@ def contestPlots(request):
     if plot_key=='plot_fraction_stationtype':
         nbar="miscellania"
     if plot_key=='plot_ratio_qsos_min':
-        nbar="miscellania"
+        nbar="rates"
     if plot_key=='plot_mults_vs_qsos':
         nbar="evolution"
     if plot_key=='plot_time_vs_band_vs_continent':
@@ -462,6 +462,8 @@ def contestPlots(request):
         nbar="evolution"
     if plot_key=='plot_lenghtcallmorse':
         nbar="morse"
+    if plot_key=='plot_heading':
+        nbar="miscellania"
 
     #--- Lateral bar
     latbar = ""
@@ -469,9 +471,33 @@ def contestPlots(request):
         latbar = "qsos_vs_time__band"
     if "plot_ratio_qsos_min" in plot_key:
         latbar = "ratio_qsos_min"
+    if "plot_heading" in plot_key:
+        latbar = "heading"
 
     return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar})
 
+
+#________________________________________________________________________________________________________
+def maps(request):
+    #--- Get info from form
+    search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
+
+    #--- Retrieve contest object from pickle file
+    import ContestAnalyzerOnline.contestAnalyzer.Utils
+    contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
+
+    list_calls = contest.log[["call", "latitude", "longitude"]].dropna().values.tolist()
+    import itertools
+    list_calls.sort()
+    list_calls_unique =  list(k for k,_ in itertools.groupby(list_calls))
+
+    calls = list(k[0] for k in list_calls_unique)
+    lat = list(k[1] for k in list_calls_unique)
+    lon = list(k[2] for k in list_calls_unique)
+
+    return render(request, 'analysis_maps.html', {'list_calls':zip(calls, lat, lon)})
 
 #________________________________________________________________________________________________________
 def aboutMe(request):
