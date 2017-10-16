@@ -488,7 +488,19 @@ def maps(request):
     import ContestAnalyzerOnline.contestAnalyzer.Utils
     contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
 
-    list_calls = contest.log[["call", "latitude", "longitude"]].dropna().values.tolist()
+    #--- Get keys from link
+    options  = ""
+    if request.GET.get('options'):
+        options = str(request.GET.get('options'))
+
+    list_calls = None
+    if "band" in options:
+        band = int(options.replace("band", ""))
+        print band
+        list_calls = contest.log[contest.log["band"]==band][["call", "latitude", "longitude"]].dropna().values.tolist()
+    else:
+        list_calls = contest.log[["call", "latitude", "longitude"]].dropna().values.tolist()
+
     import itertools
     list_calls.sort()
     list_calls_unique =  list(k for k,_ in itertools.groupby(list_calls))
@@ -497,7 +509,7 @@ def maps(request):
     lat = list(k[1] for k in list_calls_unique)
     lon = list(k[2] for k in list_calls_unique)
 
-    return render(request, 'analysis_maps.html', {'nbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0]})
+    return render(request, 'analysis_maps.html', {'nbar':'maps', 'latbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0]})
 
 #________________________________________________________________________________________________________
 def guestbook(request):

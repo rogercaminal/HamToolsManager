@@ -2,12 +2,13 @@
 
 {% block content %}
 
-        <div id="mdiv"><div class="gradient">&nbsp; <h1>Rates</h1> </div>
-
-          <table style="margin-top:5px;margin-bottom:10px;" id="mt" class="mtc" width="100%" cellspacing="1" cellpadding="1" border="0">
-            <colgroup> <col width="200px"> <col> </colgroup>
-            <tbody>
+        <div class="container-fluid text-left">
+          <h1>Rates</h1>
+          <table class="table table-hover table-responsive table-condensed table-scrollable">
+            <thead>
               <th>Period, min</th><th>QSOs</th><th>QSOs/min</th><th>QSOs/hour</th><th>From</th><th>To</th>
+            </thead>
+            <tbody>
               {% for rate in rates_info %}
                 <tr class="thc">
                   <td>{{ rate.0 }}</td>
