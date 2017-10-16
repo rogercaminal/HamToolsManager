@@ -1,5 +1,6 @@
 data/
 test.py
+setup_web.sh
 
 *.pyc
 *~
