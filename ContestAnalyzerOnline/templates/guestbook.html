@@ -5,23 +5,31 @@
 <div class="container-fluid text-left">
   <h1>Guest book</h1>
 
-  <p>Please, let us know how you would improve this application, your opinion your suggestions... We will be very happy to work on them!</p>
+  <h5>Provide some feedback to help us improve! </h5>
+  <h1></h1>
 
   <form method="POST" class="form-horizontal">{% csrf_token %}
     <div class="form-group">
-      <label class="control-label col-sm-2" for="id_title">Title:</label>
-      <div class="col-sm-8">
-        <input class="form-control" id="id_title" maxlength="300" name="title" type="text" required />
+      <label class="control-label col-sm-2" for="id_title">Callsign</label>
+      <div class="col-sm-10">
+        <input class="form-control" id="id_title" maxlength="300" name="title" type="text" placeholder="Enter callsign or name" required />
       </div>
     </div>
     <div class="form-group">
-      <label class="control-label col-sm-2" for="id_title">Text:</label>
-      <div class="col-sm-8">
-        <textarea class="form-control" cols="40" id="id_text" name="text" rows="10" required></textarea>
+      <label class="control-label col-sm-2" for="id_email">E-mail*</label>
+      <div class="col-sm-10">
+        <input class="form-control" id="id_email" maxlength="300" name="email" type="email" placeholder="Enter email" required />
       </div>
     </div>
     <div class="form-group">
-      <div class="col-sm-offset-2 col-sm-8">
+      <label class="control-label col-sm-2" for="id_title">Comment</label>
+      <div class="col-sm-10">
+        <textarea class="form-control" cols="40" id="id_text" name="text" rows="10" placeholder="Add your comment here" required></textarea>
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="col-sm-offset-2 col-sm-10">
+        <p><small>(Fields marked with * are optional)</small></p>
         <button type="submit" class="save btn btn-default">Save</button>
       </div>
     </div>
