@@ -5,7 +5,7 @@ import numpy as np
 import pickle
 
 from pyhamtools import LookupLib, Callinfo
-from pyhamtools.locator import latlong_to_locator, calculate_heading
+from pyhamtools.locator import latlong_to_locator, calculate_heading, calculate_heading_longpath, calculate_distance, calculate_distance_longpath
 
 my_lookuplib = LookupLib(lookuptype="countryfile")
 
@@ -52,23 +52,26 @@ class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
             print "Problem getting my own DXCC info!"
 
         if len(dxcc.keys())>0:
-            contest.log["mydxcc"]       = dxcc["country"]
-            contest.log["myzonecq"]     = int(dxcc["cqz"])
-            contest.log["myzoneitu"]    = int(dxcc["ituz"])
-            contest.log["mycontinent"]  = "continent"+dxcc["continent"]
-            contest.log["mylatitude"]   = float(dxcc["latitude"])
-            contest.log["mylongitude"]  = -float(dxcc["longitude"])
-            contest.log["mylocator"]    = latlong_to_locator(float(dxcc["latitude"]), -float(dxcc["longitude"]))
-            contest.log["heading"]      = contest.log.apply(lambda row: calculate_heading(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
-            contest.log["heading_long"] = contest.log.apply(lambda row: calculate_heading(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
+            contest.log["mydxcc"]        = dxcc["country"]
+            contest.log["myzonecq"]      = int(dxcc["cqz"])
+            contest.log["myzoneitu"]     = int(dxcc["ituz"])
+            contest.log["mycontinent"]   = "continent"+dxcc["continent"]
+            contest.log["mylatitude"]    = float(dxcc["latitude"])
+            contest.log["mylongitude"]   = -float(dxcc["longitude"])
+            contest.log["mylocator"]     = latlong_to_locator(float(dxcc["latitude"]), -float(dxcc["longitude"]))
+            contest.log["heading"]       = contest.log.apply(lambda row: calculate_heading(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
+            contest.log["heading_long"]  = contest.log.apply(lambda row: calculate_heading_longpath(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
+            contest.log["distance"]      = contest.log.apply(lambda row: calculate_distance(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
+            contest.log["distance_long"] = contest.log.apply(lambda row: calculate_distance_longpath(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
         else:
-            contest.log["mydxcc"]       = np.NaN
-            contest.log["myzonecq"]     = np.NaN
-            contest.log["myzoneitu"]    = np.NaN
-            contest.log["mycontinent"]  = np.NaN
-            contest.log["mylatitude"]   = np.NaN
-            contest.log["mylongitude"]  = np.NaN
-            contest.log["mylocator"]    = np.NaN
-            contest.log["heading"]      = np.NaN
-            contest.log["heading_long"] = np.NaN
-
+            contest.log["mydxcc"]        = np.NaN
+            contest.log["myzonecq"]      = np.NaN
+            contest.log["myzoneitu"]     = np.NaN
+            contest.log["mycontinent"]   = np.NaN
+            contest.log["mylatitude"]    = np.NaN
+            contest.log["mylongitude"]   = np.NaN
+            contest.log["mylocator"]     = np.NaN
+            contest.log["heading"]       = np.NaN
+            contest.log["heading_long"]  = np.NaN
+            contest.log["distance"]      = np.NaN
+            contest.log["distance_long"] = np.NaN
