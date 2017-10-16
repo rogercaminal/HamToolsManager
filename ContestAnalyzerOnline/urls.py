@@ -15,5 +15,5 @@ urlpatterns = [
     url(r'RatePerMin/', views.contestRatesPerMinute, name='ratepermin'),
     url(r'Charts/', views.contestPlots, name='plots'),
     url(r'Maps/', views.maps, name='maps'),
-    url(r'AboutMe/', views.aboutMe, name='aboutme'),
+    url(r'GuestBook/', views.guestbook, name='guestbook'),
 ]

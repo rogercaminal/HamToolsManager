@@ -16,11 +16,10 @@ class ContestForm(forms.Form):
     year     = forms.ChoiceField(label='Year', choices=getYearsTuple())
     mode     = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ssb", "SSB")])
 
-##___________________________________________
-#class ContestForm(forms.Form):
-#    def __init__(self, *args, **kwargs):
-#        super(ContestForm, self).__init__(*args, **kwargs)
-#        self.fields["name"]     = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW")])
-#        self.fields["callsign"] = forms.CharField(label='Callsign', max_length=100)
-#        self.fields["year"]     = forms.ChoiceField(label='Year', choices=getYearsTuple())
-#        self.fields["mode"]     = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ssb", "SSB")])
+#___________________________________________
+from .models import Post
+class PostForm(forms.ModelForm):
+
+    class Meta:
+        model = Post
+        fields = ('title', 'text')

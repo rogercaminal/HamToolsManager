@@ -500,5 +500,18 @@ def maps(request):
     return render(request, 'analysis_maps.html', {'nbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0]})
 
 #________________________________________________________________________________________________________
-def aboutMe(request):
-    return HttpResponse("Info about me")
+def guestbook(request):
+    from .forms import PostForm
+    from django.utils import timezone
+    if request.method == "POST":
+            form = PostForm(request.POST)
+            if form.is_valid():
+                post = form.save(commit=False)
+                post.author = request.user
+                post.published_date = timezone.now()
+                post.save()
+                return redirect('contestAnalyzer:mainPage')
+    else:
+        form = PostForm()
+
+    return render(request, 'guestbook.html', {'form':form})
