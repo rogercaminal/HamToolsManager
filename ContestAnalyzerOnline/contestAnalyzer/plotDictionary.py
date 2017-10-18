@@ -14,3 +14,4 @@ plotDictionary.addPlot("plot_time_vs_band_vs_continent", ContestAnalyzerOnline.c
 plotDictionary.addPlot("plot_freq_vs_date",              ContestAnalyzerOnline.contestAnalyzer.plotLibrary.plot_freq_vs_date.plot_freq_vs_date("plot_freq_vs_date"))
 plotDictionary.addPlot("plot_lenghtcallmorse",           ContestAnalyzerOnline.contestAnalyzer.plotLibrary.plot_lenghtcallmorse.plot_lenghtcallmorse("plot_lenghtcallmorse"))
 plotDictionary.addPlot("plot_heading",                   ContestAnalyzerOnline.contestAnalyzer.plotLibrary.plot_heading.plot_heading("plot_heading"))
+plotDictionary.addPlot("plot_db_vs_date",                ContestAnalyzerOnline.contestAnalyzer.plotLibrary.plot_db_vs_date.plot_db_vs_date("plot_db_vs_date"))

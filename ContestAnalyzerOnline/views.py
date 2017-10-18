@@ -65,6 +65,9 @@ def process(request):
                     callsDict[letter].append(call)
         return render(request, 'analysis_availablecalls.html', {'contest': contest, 'callsDict':sorted(callsDict.items())})
 
+    #--- Download reverse beacon spots
+    reverseBeaconSpots_isgood = ContestAnalyzerOnline.contestAnalyzer.Utils.importReverseBeaconSpots(contest=contest)
+
     if doLoop:
         # Get toolDictionary, with the tools to be applied.
         # To add a new tool:
@@ -438,32 +441,33 @@ def contestPlots(request):
     plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
     plot_snippet = ""
     for plot in plotDict.names():
-        print plot, plot_key
         if plot==plot_key:
             plot_snippet = plotDict.plots()[plot_key].doPlot(contest=contest, doSave=True, options=options)
 
     #--- Mark active block in html
     nbar=""
     if plot_key=='plot_qsos_vs_time__band':
-        nbar="qsoshour"
+        nbar="rates"
     if plot_key=='plot_qsos_vs_time__continent':
-        nbar="qsoshour"
+        nbar="rates"
     if plot_key=='plot_qsos_vs_time__stationtype':
-        nbar="qsoshour"
+        nbar="rates"
     if plot_key=='plot_fraction_stationtype':
-        nbar="miscellania"
+        nbar="operation"
     if plot_key=='plot_ratio_qsos_min':
         nbar="rates"
     if plot_key=='plot_mults_vs_qsos':
-        nbar="evolution"
+        nbar="operation"
     if plot_key=='plot_time_vs_band_vs_continent':
-        nbar="qsoshour"
+        nbar="rates"
     if plot_key=='plot_freq_vs_date':
-        nbar="evolution"
+        nbar="operation"
     if plot_key=='plot_lenghtcallmorse':
         nbar="morse"
     if plot_key=='plot_heading':
-        nbar="miscellania"
+        nbar="operation"
+    if plot_key=='plot_db_vs_date':
+        nbar="operation"
 
     #--- Lateral bar
     latbar = ""
@@ -473,6 +477,8 @@ def contestPlots(request):
         latbar = "ratio_qsos_min"
     if "plot_heading" in plot_key:
         latbar = "heading"
+    if "plot_db_vs_date" in plot_key:
+        latbar = "db_vs_time"
 
     return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar})
 

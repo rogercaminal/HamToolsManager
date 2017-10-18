@@ -17,6 +17,7 @@ class contest(object):
         self.club = ""
         self.year = ""
         self.log = None
+        self.rbspots = None
 
         self.save = False
         self.folderToSave = ""

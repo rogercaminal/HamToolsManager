@@ -18,6 +18,6 @@ from django.contrib import admin
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-#    url(r'^$', include('ContestAnalyzerOnline.urls', namespace='ContestAnalyzer')),
-    url(r'^Contest/', include('ContestAnalyzerOnline.urls', namespace='ContestAnalyzer')),
+    url(r'', include('ContestAnalyzerOnline.urls', namespace='ContestAnalyzer')),
+#    url(r'^Contest/', include('ContestAnalyzerOnline.urls', namespace='ContestAnalyzer')),
 ]
