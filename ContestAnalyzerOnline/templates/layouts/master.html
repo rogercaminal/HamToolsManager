@@ -41,7 +41,12 @@
           <ul class="nav navbar-nav">
             <li class="{%if nbar == 'main' %}active{%endif%}"><a href="{% url 'contestAnalyzer:mainPage' %}">Main</a></li>
             <li class="{%if nbar == 'summary' %}active{%endif%}"><a href="{% url 'contestAnalyzer:summary' %}">Summary</a></li>
-            <li class="{%if nbar == 'log' %}active{%endif%}"><a href="{% url 'contestAnalyzer:log' %}">Log</a></li>
+            <li class="dropdown{%if nbar == 'log' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Log <span class="caret"></span></a>
+              <ul class="dropdown-menu">
+                <li><a href="{% url 'contestAnalyzer:log' %}">Contest log</a></li>
+                <li><a href="{% url 'contestAnalyzer:dxccfreq' %}">Top DXCC</a></li>
+               </ul>
+             </li>
             <li class="dropdown{%if nbar == 'rates' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Rate <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="{% url 'contestAnalyzer:rates' %}">Maximum rates</a></li>
@@ -58,14 +63,14 @@
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_fraction_stationtype">Station type fraction</a></li>
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_mults_vs_qsos">Multipliers evolution per QSO</a></li>
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading">Beam direction</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_freq_vs_date">TX frequency evolution</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date">Signal strength evolution</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_freq_vs_date">TX frequency</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=avg15min">TX signal report</a></li>
               </ul>
             </li>
             <li class="dropdown{%if nbar == 'morse' %} active{%endif%}"><a class="dropdown-toggle" data-toggle="dropdown" href="#">CW <span class="caret"></span></a>
               <ul class="dropdown-menu">
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_lenghtcallmorse;options=35WPM">Call length</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed">TX speed</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=avg5min">TX speed</a></li>
               </ul>
             </li>
             <li class="{%if nbar == 'maps' %}active{%endif%}"><a href="{% url 'contestAnalyzer:maps' %}">Map</a></li>
@@ -97,28 +102,30 @@
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=inband">Inband</a></li>
               {% elif latbar == 'heading' %}
                 <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading">All</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band10">10 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band15">15 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band20">20 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band40">40 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band80">80 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=band160">160 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0000to0259">00:00 - 02:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0300to0559">03:00 - 05:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0600to0859">06:00 - 08:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0900to1159">09:00 - 11:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1200to1459">12:00 - 14:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1500to1759">15:00 - 17:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1800to2059">18:00 - 20:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from2100to2359">21:00 - 23:59</a></li>
               {% elif latbar == 'db_vs_time' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date">All</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAF">Africa</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAS">Asia</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentEU">Europe</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentNA">North America</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentOC">Ocenania</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentSA">South America</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=avg15min">All</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAF,avg15min">Africa</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAS,avg15min">Asia</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentEU,avg15min">Europe</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentNA,avg15min">North America</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentOC,avg15min">Ocenania</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentSA,avg15min">South America</a></li>
               {% elif latbar == 'cwspeed' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed">All</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band10">10 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band15">15 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band20">20 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band40">40 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band80">80 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band160">160 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=avg5min">All</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band10,avg5min">10 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band15,avg5min">15 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band20,avg5min">20 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band40,avg5min">40 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band80,avg5min">80 m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band160,avg5min">160 m</a></li>
               {% elif latbar == 'maps' %}
                 <li><a href="{% url 'contestAnalyzer:maps' %}">All</a></li>
                 <li><a href="{% url 'contestAnalyzer:maps' %}?options=band10">10 m</a></li>

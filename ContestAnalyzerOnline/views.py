@@ -417,6 +417,71 @@ def contestRatesPerMinute(request):
 
 
 #________________________________________________________________________________________________________
+def contestDXCCFrequency(request):
+    #--- Get info from form
+    search_info = request.session['cleaned_data']
+    if "new_callsign" in request.session.keys():
+        request.session['cleaned_data']['callsign'] = request.session['new_callsign']
+
+    #--- Retrieve contest object from pickle file
+    import ContestAnalyzerOnline.contestAnalyzer.Utils
+    contest = ContestAnalyzerOnline.contestAnalyzer.Utils.retrieveContestObject(search_info)
+
+    qsos_page = 10
+
+    log = contest.log
+    cumulated_info = []
+    if request.GET.get('filter'):
+        rule = str(request.GET['filter']).split(",")
+        for r in rule:
+            if "band" in r:
+                band = int(r.replace("band:", ""))
+                log = log[log["band"]==band]
+                cumulated_info.append(r)
+            if 'date' in r:
+                date = str(r.replace("date:", ""))
+                log = log[log["date"]==date]
+                cumulated_info.append(r)
+            if 'time' in r:
+                time = str(r.replace("time:", ""))
+                log = log[log["time"]==time]
+                cumulated_info.append(r)
+            if 'dxcc' in r:
+                dxcc = str(r.replace("dxcc:", ""))
+                log = log[log["dxcc"]==dxcc]
+                cumulated_info.append(r)
+        cumulated_info = ','.join(cumulated_info)
+
+    page = 1
+    if request.GET.get('filter'):
+        rule = str(request.GET['filter']).split(",")
+        for r in rule:
+            if "page" in r:
+                page = int(r.replace("page:", ""))
+
+    grouped_counts = log.groupby("dxcc")["dxcc"].count()
+    counts = grouped_counts.tolist()
+    names =  grouped_counts.index.tolist()
+
+    num_pages = []
+    filtered_length = len(grouped_counts)
+    for i in range(1, int(round(filtered_length/float(qsos_page), 0) + 1)):
+        num_pages.append(i)
+
+    list_dxcc = []
+    for n, c in zip(names, counts):
+        list_dxcc.append([n, c])
+
+    from operator import itemgetter
+    list_dxcc = sorted(list_dxcc, key=itemgetter(1))
+    list_dxcc = list(reversed(list_dxcc))
+
+    list_dxcc = list_dxcc[(page-1)*qsos_page:page*qsos_page]
+
+    return render(request, 'analysis_dxccfreq.html', {'list_dxcc':list_dxcc, 'page':page, 'num_pages':num_pages, 'total_pages':len(num_pages), 'nbar':'log'})
+
+
+#________________________________________________________________________________________________________
 def contestPlots(request):
     #--- Get info from form
     search_info = request.session['cleaned_data']

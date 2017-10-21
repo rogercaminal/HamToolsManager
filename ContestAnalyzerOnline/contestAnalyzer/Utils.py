@@ -176,9 +176,6 @@ def importReverseBeaconSpots(contest):
             sp["freq"]  = pd.to_numeric(sp["freq"])
             sp["speed"] = pd.to_numeric(sp["speed"])
             sp["db"]    = pd.to_numeric(sp["db"])
-
-            sp["date_roundmin"] = sp["date"].dt.round("min")
-
             spots_list.append(sp[sp["dx"]==contest.callsign])
         contest.rbspots = pd.concat(spots_list)
         return True

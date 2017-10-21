@@ -12,12 +12,18 @@ class plot_cwspeed(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
 
         #--- Extra conditions
         extraConditions = (contest.rbspots["speed"]>0.)
-        if "band" in options:
-            band = options.replace("band", "")
-            extraConditions &= (contest.rbspots["band"]==str("%sm"%band))
+        avg = "5min"
+        for opt in options.split(","):
+            if "band" in opt:
+                band = opt.replace("band", "")
+                extraConditions &= (contest.rbspots["band"]==str("%sm"%band))
+            if "avg" in opt:
+                avg = opt.replace("avg", "")
+
+        contest.rbspots["date_round%s"%avg] = contest.rbspots["date"].dt.round(avg)
 
         #--- Define the datasets
-        y  = contest.rbspots[extraConditions].groupby("date_roundmin")["speed"].mean()
+        y  = contest.rbspots[extraConditions].groupby("date_round%s"%avg)["speed"].mean()
         x  = y.index.tolist()
         data = [
                 go.Scatter(x=x , y=y , line=dict(color=('blue'),   width=4), hoverinfo="x+y", mode="line", name="CW speed"),

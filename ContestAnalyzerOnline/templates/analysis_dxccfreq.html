@@ -1,0 +1,86 @@
+{% extends "layouts/master.html" %}
+
+{% block content %}
+
+        <div class="container-fluid text-left">
+          <h1>Top DXCC</h1>
+        </div>
+
+<!-- Pagination -->
+        <div class="container-fluid text-center">
+
+          <ul class="pagination">
+
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:1">&#60;&#60;</a></li>
+
+            {% if page == 1 %}
+              <li class="disabled"><a href="#">&#60;</a></li>
+            {% else %}
+            <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{page|add:-1}}">&#60;</a></li>
+            {% endif %}
+
+            {% if page == 1 %}
+              <li class="active"><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:1">1</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:2">2</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:3">3</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:4">4</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:5">5</a></li>
+
+            {% elif page == 2 %}
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:1">1</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:2">2</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:3">3</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:4">4</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:5">5</a></li>
+
+            {% elif page == total_pages|add:-1 %}
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-4 }}">{{ total_pages|add:-4 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-3 }}">{{ total_pages|add:-3 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-2 }}">{{ total_pages|add:-2 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-1 }}">{{ total_pages|add:-1 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages }}">{{ total_pages }}</a></li>
+
+            {% elif page == total_pages %}
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-4 }}">{{ total_pages|add:-4 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-3 }}">{{ total_pages|add:-3 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-2 }}">{{ total_pages|add:-2 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages|add:-1 }}">{{ total_pages|add:-1 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ total_pages }}">{{ total_pages }}</a></li>
+
+            {% else %}
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ page|add:-2 }}">{{ page|add:-2 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ page|add:-1 }}">{{ page|add:-1 }}</a></li>
+              <li class="active"><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ page }}">{{ page }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ page|add:1 }}">{{ page|add:1 }}</a></li>
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{ page|add:2 }}">{{ page|add:2 }}</a></li>
+            {% endif %}
+
+            {% if page == total_pages %}
+              <li class="disabled"><a href="#">&#62;</a></li>
+            {% else %}
+              <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{page|add:1}}">&#62;</a></li>
+            {% endif %}
+
+            <li><a href="{% url 'contestAnalyzer:dxccfreq' %}/?filter=page:{{total_pages}}">&#62;&#62;</a></li>
+
+          </ul>
+        </div>
+
+<!-- Table -->
+        <div class="container-fluid text-left">
+          <table class="table table-hover table-responsive">
+            <thead>
+              <th>DXCC</th><th># QSOs</th>
+            </thead>
+            <tbody>
+              {% for dxcc in list_dxcc %}
+                <tr class="thc">
+                  <td>{{ dxcc.0 }}</td>
+                  <td><a href="{% url 'contestAnalyzer:log' %}?filter=page:1,dxcc:{{ dxcc.0 }}">{{ dxcc.1 }}</a></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+{% endblock %}

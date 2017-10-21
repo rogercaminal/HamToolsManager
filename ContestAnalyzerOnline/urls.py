@@ -13,6 +13,7 @@ urlpatterns = [
     url(r'Log/', views.contestLog, name='log'),
     url(r'Rates/', views.contestRates, name='rates'),
     url(r'RatePerMin/', views.contestRatesPerMinute, name='ratepermin'),
+    url(r'DXCCFrequency/', views.contestDXCCFrequency, name='dxccfreq'),
     url(r'Charts/', views.contestPlots, name='plots'),
     url(r'Maps/', views.maps, name='maps'),
     url(r'GuestBook/', views.guestbook, name='guestbook'),
