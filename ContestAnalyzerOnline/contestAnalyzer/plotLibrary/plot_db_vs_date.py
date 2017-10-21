@@ -19,13 +19,25 @@ class plot_db_vs_date(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
             extraConditions &= (contest.rbspots["callsign"]==call)
 
         #--- Define the datasets
+        y10  = contest.rbspots[(contest.rbspots["band"]=="10m")  & extraConditions].groupby("date_roundmin")["db"].mean()
+        y15  = contest.rbspots[(contest.rbspots["band"]=="15m")  & extraConditions].groupby("date_roundmin")["db"].mean()
+        y20  = contest.rbspots[(contest.rbspots["band"]=="20m")  & extraConditions].groupby("date_roundmin")["db"].mean()
+        y40  = contest.rbspots[(contest.rbspots["band"]=="40m")  & extraConditions].groupby("date_roundmin")["db"].mean()
+        y80  = contest.rbspots[(contest.rbspots["band"]=="80m")  & extraConditions].groupby("date_roundmin")["db"].mean()
+        y160 = contest.rbspots[(contest.rbspots["band"]=="160m") & extraConditions].groupby("date_roundmin")["db"].mean()
+        x10  = y10.index.tolist()
+        x15  = y15.index.tolist()
+        x20  = y20.index.tolist()
+        x40  = y40.index.tolist()
+        x80  = y80.index.tolist()
+        x160 = y160.index.tolist()
         data = [
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="10m") & extraConditions]["db"], line=dict(color=('blue'), width=4), hoverinfo="x+y", mode="line", name="10m"),
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="15m") & extraConditions]["db"], line=dict(color=('orange'), width=4), hoverinfo="x+y", mode="line", name="15m"),
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="20m") & extraConditions]["db"], line=dict(color=('gren'), width=4), hoverinfo="x+y", mode="line", name="20m"),
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="40m") & extraConditions]["db"], line=dict(color=('red'), width=4), hoverinfo="x+y", mode="line", name="40m"),
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="80m") & extraConditions]["db"], line=dict(color=('purple'), width=4), hoverinfo="x+y", mode="line", name="80m"),
-                go.Scatter(x=contest.rbspots["date"], y=contest.rbspots[(contest.rbspots["band"]=="160m") & extraConditions]["db"], line=dict(color=('brown'), width=4), hoverinfo="x+y", mode="line", name="160m"),
+                go.Scatter(x=x10 , y=y10 , line=dict(color=('blue'),   width=3), hoverinfo="x+y", mode="line", name="10m"),
+                go.Scatter(x=x15 , y=y15 , line=dict(color=('orange'), width=3), hoverinfo="x+y", mode="line", name="15m"),
+                go.Scatter(x=x20 , y=y20 , line=dict(color=('gren'),   width=3), hoverinfo="x+y", mode="line", name="20m"),
+                go.Scatter(x=x40 , y=y40 , line=dict(color=('red'),    width=3), hoverinfo="x+y", mode="line", name="40m"),
+                go.Scatter(x=x80 , y=y80 , line=dict(color=('purple'), width=3), hoverinfo="x+y", mode="line", name="80m"),
+                go.Scatter(x=x160, y=y160, line=dict(color=('brown'),  width=3), hoverinfo="x+y", mode="line", name="160m"),
                 ]
 
         layout = go.Layout(

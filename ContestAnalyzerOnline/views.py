@@ -468,6 +468,8 @@ def contestPlots(request):
         nbar="operation"
     if plot_key=='plot_db_vs_date':
         nbar="operation"
+    if plot_key=='plot_cwspeed':
+        nbar="morse"
 
     #--- Lateral bar
     latbar = ""
@@ -479,6 +481,8 @@ def contestPlots(request):
         latbar = "heading"
     if "plot_db_vs_date" in plot_key:
         latbar = "db_vs_time"
+    if plot_key=='plot_cwspeed':
+        latbar="cwspeed"
 
     return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar})
 
