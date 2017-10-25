@@ -9,51 +9,76 @@ import plotly.tools
 class plot_heading(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
     def doPlot(self, contest, doSave, options=""):
         #--- Get counts
-        counts_10  = []
-        counts_15  = []
-        counts_20  = []
-        counts_40  = []
-        counts_80  = []
-        counts_160 = []
         directions = []
+
+        counts = {}
+        counts[10]  = []
+        counts[15]  = []
+        counts[20]  = []
+        counts[40]  = []
+        counts[80]  = []
+        counts[160] = []
+
+        colors = {}
+        colors[10]  = "blue"
+        colors[15]  = "orange"
+        colors[20]  = "green"
+        colors[40]  = "red"
+        colors[80]  = "purple"
+        colors[160] = "brown"
+
+        #--- Add extra condition to all selections
+        extraConditions = (contest.log["band"]>0)
+        band = None
+        for opt in options.split(","):
+            if "band" in opt:
+                band = int(str(opt.replace("band", "")))
+            if "from" in opt:
+                time_from = str(opt.replace("from", ""))
+                extraConditions &= (contest.log["time"]>=time_from)
+            if "to" in opt:
+                time_to   = str(opt.replace("to", ""))
+                extraConditions &= (contest.log["time"]<=time_to)
+
+        #--- Loop on bins of direction
         binsize = 10
         for direction in range(0, 360, binsize):
             directions.append(direction)
 
-            if options=="":
-                counts_10.append(contest.log[(contest.log["band"]==10) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_15.append(contest.log[(contest.log["band"]==15) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_20.append(contest.log[(contest.log["band"]==20) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_40.append(contest.log[(contest.log["band"]==40) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_80.append(contest.log[(contest.log["band"]==80) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_160.append(contest.log[(contest.log["band"]==160) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[10].append(contest.log[(contest.log["band"]==10) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[15].append(contest.log[(contest.log["band"]==15) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[20].append(contest.log[(contest.log["band"]==20) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[40].append(contest.log[(contest.log["band"]==40) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[80].append(contest.log[(contest.log["band"]==80) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+            counts[160].append(contest.log[(contest.log["band"]==160) & extraConditions & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+
+        maximum = 0
+        for i in range(len(counts[10])):
+            if band is None:
+                m = max(counts[10][i], max(counts[15][i], max(counts[20][i], max(counts[40][i], max(counts[80][i], counts[160][i])))))
             else:
-                time_from = str(options.replace("from", "").split("to")[0])
-                time_to   = str(options.replace("from", "").split("to")[1])
-                counts_10.append(contest.log[(contest.log["band"]==10) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_15.append(contest.log[(contest.log["band"]==15) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_20.append(contest.log[(contest.log["band"]==20) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_40.append(contest.log[(contest.log["band"]==40) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_80.append(contest.log[(contest.log["band"]==80) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
-                counts_160.append(contest.log[(contest.log["band"]==160) & (contest.log["time"]>=time_from) & (contest.log["time"]<=time_to) & (contest.log["heading"]>direction) & (contest.log["heading"]<(direction+binsize))]["heading"].count())
+                m = counts[band][i]
+            if m>maximum:
+                maximum = m
+
 
         #--- Fill data and layouts
-        data = [
-                go.Area(r=counts_10,  t=directions, name="10m",  hoverinfo="all"),
-                go.Area(r=counts_15,  t=directions, name="15m",  hoverinfo="all"),
-                go.Area(r=counts_20,  t=directions, name="20m",  hoverinfo="all"),
-                go.Area(r=counts_40,  t=directions, name="40m",  hoverinfo="all"),
-                go.Area(r=counts_80,  t=directions, name="80m",  hoverinfo="all"),
-                go.Area(r=counts_160, t=directions, name="160m", hoverinfo="all"),
-                ]
+        bands = [10, 15, 20, 40, 80, 160]
+        if band is not None:
+            bands = [band]
+
+        data = []
+        for b in bands:
+            data.append(go.Area(r=counts[b],  t=directions, name="%dm"%b,  hoverinfo="all", marker=dict(color=colors[b])))
 
         layout = go.Layout(
-            title="Heading",
+            title="Beam heading",
             orientation=270,
             legend=dict(font=(dict(size=16))),
             width=750,
             height=750,
-            angularaxis=dict(showticklabels=True)
+            angularaxis=dict(showticklabels=True),
+            radialaxis=dict(range=[0,1.2*maximum]),
                 )
 
         fig = go.Figure(data=data, layout=layout)

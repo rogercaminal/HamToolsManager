@@ -37,7 +37,7 @@ class plot_cwspeed(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
             barmode='stack',
             title=title,
             xaxis=dict(title="Time", rangeselector=dict(buttons=[dict(count=1, label='1h', step='hour', stepmode='backward'), dict(count=6, label='6h', step='hour', stepmode='backward'), dict(count=12, label='12h', step='hour', stepmode='backward'), dict(count=24, label='24h', step='hour', stepmode='backward'), dict(step='all')]), rangeslider=dict()),
-            yaxis=dict(title="dB"),
+            yaxis=dict(title="CW speed [WPM]"),
             width=750,
             height=750,
         )

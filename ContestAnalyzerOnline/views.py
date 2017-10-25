@@ -549,7 +549,21 @@ def contestPlots(request):
     if plot_key=='plot_cwspeed':
         latbar="cwspeed"
 
-    return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar})
+    #--- Old options to retain
+    old_options = ""
+    for opt in options.split(","):
+        if "plot_heading" in plot_key:
+            if "from" in opt:
+                old_options += opt+","
+            if "to" in opt:
+                old_options += opt+","
+        if "plot_db_vs_date" in plot_key:
+            if "continent" in opt:
+                old_options += opt+","
+            if "avg" in opt:
+                old_options += opt+","
+
+    return render(request, 'analysis_images.html', {"plot_snippet":plot_snippet, 'nbar':nbar, 'latbar':latbar, 'old_options':old_options})
 
 
 #________________________________________________________________________________________________________
@@ -565,16 +579,24 @@ def maps(request):
 
     #--- Get keys from link
     options  = ""
+    options_str = ""
     if request.GET.get('options'):
-        options = str(request.GET.get('options'))
+        options = str(request.GET.get('options')).split(",")
 
     list_calls = None
-    if "band" in options:
-        band = int(options.replace("band", ""))
-        print band
-        list_calls = contest.log[contest.log["band"]==band][["call", "latitude", "longitude"]].dropna().values.tolist()
-    else:
-        list_calls = contest.log[["call", "latitude", "longitude"]].dropna().values.tolist()
+    extraConditions = (contest.log["band"]>0)
+    for opt in options:
+        if "band" in opt:
+            options_str = opt+","
+            band = int(opt.replace("band", ""))
+            extraConditions &= (contest.log["band"]==band)
+        if "from" in opt:
+            time_from = str(opt.replace("from", ""))
+            extraConditions &= (contest.log["time"]>=time_from)
+        if "to" in opt:
+            time_to   = str(opt.replace("to", ""))
+            extraConditions &= (contest.log["time"]<=time_to)
+    list_calls = contest.log[extraConditions][["call", "latitude", "longitude"]].dropna().values.tolist()
 
     import itertools
     list_calls.sort()
@@ -584,7 +606,7 @@ def maps(request):
     lat = list(k[1] for k in list_calls_unique)
     lon = list(k[2] for k in list_calls_unique)
 
-    return render(request, 'analysis_maps.html', {'nbar':'maps', 'latbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0]})
+    return render(request, 'analysis_maps.html', {'nbar':'maps', 'latbar':'maps', 'list_calls':zip(calls, lat, lon), 'mylat':contest.log["mylatitude"].iloc[0], 'mylon':contest.log["mylongitude"].iloc[0], 'old_options':options_str})
 
 #________________________________________________________________________________________________________
 def guestbook(request):

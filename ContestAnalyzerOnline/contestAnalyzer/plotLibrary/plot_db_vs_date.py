@@ -9,10 +9,25 @@ import plotly.tools
 class plot_db_vs_date(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
     def doPlot(self, contest, doSave, options=""):
 
+        #--- Define dictionaries
+        x = {}
+        y = {}
+
+        colors = {}
+        colors[10]  = "blue"
+        colors[15]  = "orange"
+        colors[20]  = "green"
+        colors[40]  = "red"
+        colors[80]  = "purple"
+        colors[160] = "brown"
+
         #--- Extra conditions
         extraConditions = (contest.rbspots["db"]>0.)
         avg = "15min"
+        band = None
         for opt in options.split(","):
+            if "band" in opt:
+                band = opt.replace("band", "")+"m"
             if "continent" in opt:
                 cont = opt.replace("continent", "")
                 extraConditions &= (contest.rbspots["de_cont"]==cont)
@@ -25,26 +40,27 @@ class plot_db_vs_date(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
         contest.rbspots["date_round%s"%avg] = contest.rbspots["date"].dt.round(avg)
 
         #--- Define the datasets
-        y10  = contest.rbspots[(contest.rbspots["band"]=="10m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        y15  = contest.rbspots[(contest.rbspots["band"]=="15m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        y20  = contest.rbspots[(contest.rbspots["band"]=="20m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        y40  = contest.rbspots[(contest.rbspots["band"]=="40m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        y80  = contest.rbspots[(contest.rbspots["band"]=="80m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        y160 = contest.rbspots[(contest.rbspots["band"]=="160m") & extraConditions].groupby("date_round%s"%avg)["db"].mean()
-        x10  = y10.index.tolist()
-        x15  = y15.index.tolist()
-        x20  = y20.index.tolist()
-        x40  = y40.index.tolist()
-        x80  = y80.index.tolist()
-        x160 = y160.index.tolist()
-        data = [
-                go.Scatter(x=x10 , y=y10 , line=dict(color=('blue'),   width=3), hoverinfo="x+y", mode="line", name="10m"),
-                go.Scatter(x=x15 , y=y15 , line=dict(color=('orange'), width=3), hoverinfo="x+y", mode="line", name="15m"),
-                go.Scatter(x=x20 , y=y20 , line=dict(color=('gren'),   width=3), hoverinfo="x+y", mode="line", name="20m"),
-                go.Scatter(x=x40 , y=y40 , line=dict(color=('red'),    width=3), hoverinfo="x+y", mode="line", name="40m"),
-                go.Scatter(x=x80 , y=y80 , line=dict(color=('purple'), width=3), hoverinfo="x+y", mode="line", name="80m"),
-                go.Scatter(x=x160, y=y160, line=dict(color=('brown'),  width=3), hoverinfo="x+y", mode="line", name="160m"),
-                ]
+        y[10]  = contest.rbspots[(contest.rbspots["band"]=="10m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        y[15]  = contest.rbspots[(contest.rbspots["band"]=="15m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        y[20]  = contest.rbspots[(contest.rbspots["band"]=="20m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        y[40]  = contest.rbspots[(contest.rbspots["band"]=="40m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        y[80]  = contest.rbspots[(contest.rbspots["band"]=="80m")  & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        y[160] = contest.rbspots[(contest.rbspots["band"]=="160m") & extraConditions].groupby("date_round%s"%avg)["db"].mean()
+        x[10]  = y[10].index.tolist()
+        x[15]  = y[15].index.tolist()
+        x[20]  = y[20].index.tolist()
+        x[40]  = y[40].index.tolist()
+        x[80]  = y[80].index.tolist()
+        x[160] = y[160].index.tolist()
+
+        #--- Define data object
+        data = []
+        for b in [10, 15, 20, 40, 80, 160]:
+            if band is None:
+                data.append(go.Scatter(x=x[b] , y=y[b] , line=dict(color=(colors[b]),   width=3), hoverinfo="x+y", mode="line", name="%dm"%b))
+            else:
+                if str("%dm"%b)==band:
+                    data.append(go.Scatter(x=x[b] , y=y[b] , line=dict(color=(colors[b]),   width=3), hoverinfo="x+y", mode="line", name="%dm"%b))
 
         layout = go.Layout(
             barmode='stack',
