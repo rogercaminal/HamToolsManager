@@ -14,7 +14,7 @@ class ContestForm(forms.Form):
     name     = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW")])
     callsign = forms.CharField(label='Callsign', max_length=100)
     year     = forms.ChoiceField(label='Year', choices=getYearsTuple())
-    mode     = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ssb", "SSB")])
+    mode     = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ph", "SSB")])
 
 #___________________________________________
 from .models import Post

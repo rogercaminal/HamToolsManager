@@ -89,80 +89,135 @@
         <div class="col-sm-2 sidenav">
           <ul class="list-unstyled">
               {% if latbar == 'qsos_vs_time__band' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band">All continents</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAF">Africa</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentAS">Asia</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentEU">Europe</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentNA">North America</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentOC">Oceania</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band;options=continentSA">South America</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_qsos_vs_time__band"><h4>All continents</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <input type="hidden" name="chart" value="plot_qsos_vs_time__band" />
+                  <h4>Continent</h4>
+                  <div class="radio"><label><input type="radio" name="continent" value="AF">Africa</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="AS">Asia</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="EU">Europe</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="NA">North America</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="OC">Oceania</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="SA">South America</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% elif latbar == 'ratio_qsos_min' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min">All</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=running">Running</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=inband">Inband</a></li>
+              <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_ratio_qsos_min;options=all"><h4>All</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <input type="hidden" name="chart" value="plot_ratio_qsos_min" />
+                  <h4>Continent</h4>
+                  <div class="radio"><label><input type="radio" name="station_type" value="running">Running</label></div>
+                  <div class="radio"><label><input type="radio" name="station_type" value="inband">Inband</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% elif latbar == 'heading' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading">All</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0000,to0259">00:00 - 02:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0300,to0559">03:00 - 05:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0600,to0859">06:00 - 08:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from0900,to1159">09:00 - 11:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1200,to1459">12:00 - 14:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1500,to1759">15:00 - 17:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from1800,to2059">18:00 - 20:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options=from2100,to2359">21:00 - 23:59</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band10">10m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band15">15m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band20">20m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band40">40m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band80">80m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading;options={{old_options}}band160">160m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_heading"><h4>All</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <input type="hidden" name="chart" value="plot_heading" />
+                  <h4>Band</h4>
+                  <div class="radio"><label><input type="radio" name="band" value="10">10m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="15">15m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="20">20m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="40">40m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="80">80m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="160">160m</label></div>
+                  <h4>Time slot</h4>
+                  <div class="radio"><label><input type="radio" name="fromto" value="00000259">00:00 - 02:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="03000559">03:00 - 05:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="06000859">06:00 - 08:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="09001159">09:00 - 11:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="12001459">12:00 - 14:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="15001759">15:00 - 17:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="18002059">18:00 - 20:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="21002359">21:00 - 23:59</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% elif latbar == 'db_vs_time' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=avg15min">All</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAF,avg15min">Africa</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentAS,avg15min">Asia</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentEU,avg15min">Europe</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentNA,avg15min">North America</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentOC,avg15min">Ocenania</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=continentSA,avg15min">South America</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band10">10m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band15">15m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band20">20m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band40">40m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band80">80m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options={{old_options}}band160">160m</a></li>
+                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_db_vs_date;options=avg15min"><h4>All</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <input type="hidden" name="chart" value="plot_db_vs_date" />
+                  <input type="hidden" name="avg" value="15min" />
+                  <h4>Continent</h4>
+                  <div class="radio"><label><input type="radio" name="continent" value="AF">Africa</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="AS">Asia</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="EU">Europe</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="NA">North America</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="OC">Oceania</label></div>
+                  <div class="radio"><label><input type="radio" name="continent" value="SA">South America</label></div>
+                  <h4>Band</h4>
+                  <div class="radio"><label><input type="radio" name="band" value="10">10m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="15">15m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="20">20m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="40">40m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="80">80m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="160">160m</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% elif latbar == 'cwspeed' %}
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=avg5min">All</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band10,avg5min">10 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band15,avg5min">15 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band20,avg5min">20 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band40,avg5min">40 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band80,avg5min">80 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=band160,avg5min">160 m</a></li>
+              <li><a href="{% url 'contestAnalyzer:plots' %}?chart=plot_cwspeed;options=avg5min"><h4>All</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <input type="hidden" name="chart" value="plot_cwspeed" />
+                  <input type="hidden" name="avg" value="5min" />
+                  <h4>Band</h4>
+                  <div class="radio"><label><input type="radio" name="band" value="10">10m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="15">15m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="20">20m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="40">40m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="80">80m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="160">160m</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% elif latbar == 'maps' %}
-                <li><a href="{% url 'contestAnalyzer:maps' %}">All</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band10">10 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band15">15 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band20">20 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band40">40 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band80">80 m</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options=band160">160 m</a></li>
-                <li>&nbsp;</li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from0000,to0259">00:00 - 02:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from0300,to0559">03:00 - 05:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from0600,to0859">06:00 - 08:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from0900,to1159">09:00 - 11:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from1200,to1459">12:00 - 14:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from1500,to1759">15:00 - 17:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from1800,to2059">18:00 - 20:59</a></li>
-                <li><a href="{% url 'contestAnalyzer:maps' %}?options={{old_options}}from2100,to2359">21:00 - 23:59</a></li>
+                <li><a href="{% url 'contestAnalyzer:maps' %}"><h4>All</h4></a></li>
+                <form method="GET" class="form-horizontal">
+                  <h4>Band</h4>
+                  <div class="radio"><label><input type="radio" name="band" value="10">10m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="15">15m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="20">20m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="40">40m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="80">80m</label></div>
+                  <div class="radio"><label><input type="radio" name="band" value="160">160m</label></div>
+                  <h4>Time slot</h4>
+                  <div class="radio"><label><input type="radio" name="fromto" value="00000259">00:00 - 02:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="03000559">03:00 - 05:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="06000859">06:00 - 08:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="09001159">09:00 - 11:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="12001459">12:00 - 14:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="15001759">15:00 - 17:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="18002059">18:00 - 20:59</label></div>
+                  <div class="radio"><label><input type="radio" name="fromto" value="21002359">21:00 - 23:59</label></div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% endif %}
           </ul>
         </div>

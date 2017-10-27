@@ -500,6 +500,19 @@ def contestPlots(request):
     options  = ""
     if request.GET.get('options'):
         options = str(request.GET.get('options'))
+    else:
+        if request.GET.get('band'):
+            options += "band%s,"%str(request.GET.get('band'))
+        if request.GET.get('continent'):
+            options += "continent%s,"%str(request.GET.get('continent'))
+        if request.GET.get('station_type'):
+            options += "%s,"%str(request.GET.get('station_type'))
+        if request.GET.get('avg'):
+            options += "avg%s,"%str(request.GET.get('avg'))
+        if request.GET.get('fromto'):
+            fromto = str(request.GET.get('fromto'))
+            options += "from%s,to%s,"%(fromto[0:4], fromto[4:8])
+        options = options[:-1]
 
     #--- Generate code to inject to html
     import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
@@ -582,6 +595,15 @@ def maps(request):
     options_str = ""
     if request.GET.get('options'):
         options = str(request.GET.get('options')).split(",")
+    else:
+        if request.GET.get('band'):
+            options += "band%s,"%str(request.GET.get('band'))
+        if request.GET.get('continent'):
+            options += "continent%s,"%str(request.GET.get('continent'))
+        if request.GET.get('fromto'):
+            fromto = str(request.GET.get('fromto'))
+            options += "from%s,to%s,"%(fromto[0:4], fromto[4:8])
+        options = options[:-1].split(",")
 
     list_calls = None
     extraConditions = (contest.log["band"]>0)
