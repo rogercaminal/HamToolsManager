@@ -218,6 +218,40 @@
                     </div>
                   </div>
                 </form>
+              {% elif latbar == 'log' %}
+                <form method="GET" class="form-horizontal">
+                  <h4>Filter</h4>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="call" name="call" placeholder="Call sign">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="band" name="band" placeholder="Band, e.g. 10">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="frequency" name="frequency" placeholder="Frequency, e.g. 28010.0">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="date" name="date" placeholder="Date, e.g. 2016-11-26">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="time" name="time" placeholder="Time, e.g. 0255">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="continent" name="continent" placeholder="Continent, e.g. EU">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="DXCC" name="DXCC" placeholder="DXCC, e.g. United States">
+                  </div>
+                  <div class="form-group">
+                    <input type="text" class="form-control" id="CQ" name="CQ" placeholder="CQ zone, e.g. 14">
+                  </div>
+                  <li>&nbsp;</li>
+                  <div class="form-group">
+                    <div class=" col-sm-2">
+                      <button type="submit" class="save">Filter</button>
+                    </div>
+                  </div>
+                </form>
               {% endif %}
           </ul>
         </div>
