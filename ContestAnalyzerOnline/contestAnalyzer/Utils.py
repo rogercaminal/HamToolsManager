@@ -4,6 +4,9 @@ from urllib2 import urlopen
 import pandas as pd
 import numpy as np
 
+import logging
+logging.basicConfig(format='%(levelname)s: %(asctime)s UTC  -  Utils.py : %(message)s', level=logging.DEBUG)
+
 #--- Type of initial variables
 dict_types = {}
 dict_types["frequency"] = np.float64
@@ -24,10 +27,10 @@ def getLog(contestType, callsign, year, mode):
     try:
         response = None
         if contestType=="cqww":
-            print('Getting the log from http://www.cqww.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
+            logging.info('Getting the log from http://www.cqww.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
             response = urlopen("http://www.cqww.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))
         elif contestType=="cqwpx":
-            print('Getting the log from http://www.cqwpx.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
+            logging.info('Getting the log from http://www.cqwpx.com/publiclogs/%s%s/%s.log'%(year, mode, callsign.lower()))
             response = urlopen("http://www.cqwpx.com/publiclogs/%s%s/%s.log"%(year, mode, callsign.lower()))
         html = response.read()
         isgood = True
@@ -82,11 +85,11 @@ def getListOfYears(contestType):
 #________________________________________________________________________________________________________
 def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
 
-    print "Importing contest object..."
+    logging.info("Importing contest object")
     #--- Check if formatted pickle file exists and used unless otherwise specified
     if (not os.path.exists("%s.pickle" % contest.logName.replace(".log", ""))):
 
-        print "Checking folders and creating them..."
+        logging.info("Checking folders and creating them")
         #--- Check if logfiles folder exists and create if not
         if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))
@@ -103,7 +106,7 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
         infile.write(downloadedlog)
         infile.close()
 
-        print "Creating Pandas object..."
+        logging.info("Creating Pandas object")
         #--- Create csv file header
         csvfile = open(contest.logName.replace(".log",".csv"), "w")
         csvfile.write("frequency,mode,date,time,mycall,urrst,urnr,call,myrst,mynr,stn\n")
@@ -138,7 +141,7 @@ def importLog(contest, contestType, year, mode, callsign, forceCSV=False):
 
 #________________________________________________________________________________________________________
 def importReverseBeaconSpots(contest):
-    print "Getting reverse beacon spots..."
+    logging.info("Getting reverse beacon spots")
     #--- Check if formatted pickle file exists and used unless otherwise specified
     if (not os.path.exists("%s.pickle" % contest.logName.replace(".log", ""))):
 
@@ -155,7 +158,7 @@ def importReverseBeaconSpots(contest):
             try:
                 myzipfile = zipfile.ZipFile(StringIO(urlopen("http://reversebeacon.net/raw_data/dl.php?f=%s"%date).read()))
             except:
-                print "Problem getting reverse beacon spots"
+                logging.error("Problem getting reverse beacon spots")
                 return False
             csvfile = [StringIO(myzipfile.read(name)) for name in myzipfile.namelist()]
 

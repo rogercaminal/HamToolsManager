@@ -5,6 +5,9 @@ import pandas as pd
 import numpy as np
 import pickle
 
+import logging
+logging.basicConfig(format='%(levelname)s: %(asctime)s UTC  -  views.py : %(message)s', level=logging.DEBUG)
+
 #def index(request):
 ##    return HttpResponse('I am in the ROOT of ContestAnalyzerOnline')
 #    return render(request, 'index.html')
@@ -73,7 +76,7 @@ def process(request):
         # To add a new tool:
         # - Define the class in a separate file
         # - Add it in toolDictionary
-        print "Importing tool dictionary"
+        logging.info("Importing tool dictionary")
         import ContestAnalyzerOnline.contestAnalyzer.toolDictionary
         toolDict = ContestAnalyzerOnline.contestAnalyzer.toolDictionary.toolDictionary
 
@@ -82,7 +85,7 @@ def process(request):
         # - applyToAll if computed using built-in functions in data frame.
         # - applyToRow if complex function that needs to be computed qso by qso.
         for tool in toolDict.names():
-            print "Applying tool %s" % tool
+            logging.info("Applying tool {}".format(tool))
             contest.log = contest.log.apply(lambda row : toolDict.tools()[tool].applyToRow(row), axis=1)
             toolDict.tools()[tool].applyToAll(contest)
 
@@ -99,7 +102,7 @@ def process(request):
 
     # Generate plots
 #    if doLoop:
-#        print "Importing plot dictionary"
+#        logging.info("Importing plot dictionary")
 #        import ContestAnalyzerOnline.contestAnalyzer.plotDictionary
 #        plotDict = ContestAnalyzerOnline.contestAnalyzer.plotDictionary.plotDictionary
 #        for plot in plotDict.names():

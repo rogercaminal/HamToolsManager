@@ -9,7 +9,7 @@ import plotly.tools
 class plot_freq_vs_date(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
     def doPlot(self, contest, doSave, options=""):
         data = [
-                go.Scatter(x=contest.log["datetime"], y=contest.log["frequency"], line=dict(color=('blue'), width=4), hoverinfo="x+y", mode="line")
+                go.Scatter(x=contest.log["datetime"], y=contest.log["frequency"], line=dict(color=('blue'), width=4), hoverinfo="x+y", mode="lines")
                 ]
 
         layout = go.Layout(

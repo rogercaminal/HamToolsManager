@@ -9,7 +9,7 @@ import plotly.tools
 class plot_mults_vs_qsos(ContestAnalyzerOnline.contestAnalyzer.plotBase.plotBase):
     def doPlot(self, contest, doSave, options=""):
         data = [
-                go.Scatter(x=contest.log["qsos_evol_all"], y=contest.log["mults_evol_all"], name="%s"%(contest.callsign), line=dict(color=('blue'), width=4), hoverinfo="x+y", mode="line")
+                go.Scatter(x=contest.log["qsos_evol_all"], y=contest.log["mults_evol_all"], name="%s"%(contest.callsign), line=dict(color=('blue'), width=4), hoverinfo="x+y", mode="lines")
                 ]
 
         layout = go.Layout(
