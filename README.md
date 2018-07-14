@@ -2,23 +2,24 @@
 
 This is a web page designed for ham radio contesters. It provides a set of tables and charts to analyze a contest operation.
 
-# Pre-requisites
-This tool is mostly written in Python. To install it locally, the following packages are required:
+# Run the web
 
-```bash
-pip install numpy
-pip install pandas
-pip install django
-pip install pyhamtools
-pip install plotly
-```
-
-# Running the tool
-This package can be executed locally with the following commands:
+This tool is prepared to be run with [Docker]{https://docs.docker.com/} with the following command:
 
 ```bash
 cd HamToolsManager/
-python manage.py runserver
+docker-compose up
 ```
 
-Click [here](http://127.0.0.1:8000/Contest) to open the tool in your browser.
+Click [here](localhost:8000) to open the tool in your browser.
+
+
+## No Docker available
+
+The web can also be run even if no docker is available. The only requirement is to have a local Python 2.7 installation. Then, type the following commands:
+
+```bash
+pip install -r requirements.txt
+cd HamToolsManager/
+python manage.py runserver
+```
