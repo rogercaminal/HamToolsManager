@@ -4,14 +4,14 @@ This is a web page designed for ham radio contesters. It provides a set of table
 
 # Run the web
 
-This tool is prepared to be run with [Docker]{https://docs.docker.com/} with the following command:
+This tool is prepared to be run with [Docker](https://docs.docker.com/) with the following command:
 
 ```bash
 cd HamToolsManager/
 docker-compose up
 ```
 
-Click [here](localhost:8000) to open the tool in your browser.
+Click [here](http://localhost:8000/) to open the tool in your browser.
 
 
 ## No Docker available
