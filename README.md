@@ -4,19 +4,19 @@ This is a web page designed for ham radio contesters. It provides a set of table
 
 # Run the web
 
-This tool is prepared to be run with [Docker](https://docs.docker.com/) with the following command:
+The preferred way to run the web is with [Docker](https://docs.docker.com/). To do so, please type the following commands:
 
 ```bash
 cd HamToolsManager/
 docker-compose up
 ```
 
-Click [here](http://localhost:8000/) to open the tool in your browser.
+And that is it! Now click [here](http://localhost:8000/) to open the web in your browser.
 
 
 ## No Docker available
 
-The web can also be run even if no docker is available. The only requirement is to have a local Python 2.7 installation. Then, type the following commands:
+In case Docker is not available, this web can also be run. The only requirement is to have a local [Python 2.7 installation](https://www.python.org/). Once it is available in your system, type the following commands to install the required libraries and start the web:
 
 ```bash
 pip install -r requirements.txt
