@@ -23,8 +23,8 @@ class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
             row["zoneitu"]   = int(dxcc["ituz"])
             row["continent"] = "continent"+dxcc["continent"]
             row["latitude"]  = float(dxcc["latitude"])
-            row["longitude"] = -float(dxcc["longitude"])
-            row["locator"]   = latlong_to_locator(dxcc["latitude"], -dxcc["longitude"])
+            row["longitude"] = float(dxcc["longitude"])
+            row["locator"]   = latlong_to_locator(dxcc["latitude"], dxcc["longitude"])
         except:
             row["dxcc"]      = np.NaN
             row["zonecq"]    = np.NaN
@@ -57,8 +57,8 @@ class tool_getdxcc(ContestAnalyzerOnline.contestAnalyzer.toolBase.toolBase):
             contest.log["myzoneitu"]     = int(dxcc["ituz"])
             contest.log["mycontinent"]   = "continent"+dxcc["continent"]
             contest.log["mylatitude"]    = float(dxcc["latitude"])
-            contest.log["mylongitude"]   = -float(dxcc["longitude"])
-            contest.log["mylocator"]     = latlong_to_locator(float(dxcc["latitude"]), -float(dxcc["longitude"]))
+            contest.log["mylongitude"]   = float(dxcc["longitude"])
+            contest.log["mylocator"]     = latlong_to_locator(float(dxcc["latitude"]), float(dxcc["longitude"]))
             contest.log["heading"]       = contest.log.apply(lambda row: calculate_heading(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
             contest.log["heading_long"]  = contest.log.apply(lambda row: calculate_heading_longpath(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
             contest.log["distance"]      = contest.log.apply(lambda row: calculate_distance(row["mylocator"], row["locator"]) if isinstance(row["locator"], str) else np.NaN, axis=1)
