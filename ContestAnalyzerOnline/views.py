@@ -45,14 +45,21 @@ def process(request):
 
     # --- Download log and process it
     contest = Contest()
-    contest.logName = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contest_type, year,
-                                                                                                      mode, callsign,
-                                                                                                      contest_type, year,
-                                                                                                      mode, callsign
-                                                                                                     )
-    contest.folderToSave = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contest_type, year, mode,
-                                                                                              callsign
-                                                                                             )
+    folder_data = "ContestAnalyzerOnline/contestAnalyzer/data/"
+    contest.log_name = "{}/{}_{}_{}_{}/log_{}_{}_{}_{}.log".format(folder_data, contest_type, year,
+                                                                   mode, callsign,
+                                                                   contest_type, year,
+                                                                   mode, callsign
+                                                                   )
+    contest.folder_to_save = "{}/{}_{}_{}_{}/plots/".format(folder_data, contest_type, year, mode, callsign)
+    #contest#.log_name = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contest_type, year,
+    #                                                                                                   mode, callsign,
+    #                                                                                                   contest_type, year,
+    #                                                                                                   mode, callsign
+    #                                                                                                   )
+    #contest.folder_to_save = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contest_type, year, mode,
+    #                                                                                            callsign
+    #                                                                                            )
     contest.year = year
     is_good, do_loop = import_log(contest=contest, contestType=contest_type, year=year, mode=mode, callsign=callsign, forceCSV=False)
 
@@ -99,7 +106,7 @@ def process(request):
         contest.log["datetime"] = pd.to_datetime(contest.log["datetime"])
 
         #--- Save contest object to pickle file
-        with open("%s.pickle" % contest.logName.replace(".log", ""), 'wb') as output:
+        with open("%s.pickle" % contest.log_name.replace(".log", ""), 'wb') as output:
             pickle.dump(contest, output, pickle.HIGHEST_PROTOCOL)
 
     return redirect('contestAnalyzer:mainPage')

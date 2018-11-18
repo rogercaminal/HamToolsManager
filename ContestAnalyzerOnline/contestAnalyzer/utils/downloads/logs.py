@@ -84,7 +84,7 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
 
     logging.info("Importing contest object")
     #--- Check if formatted pickle file exists and used unless otherwise specified
-    if (not os.path.exists("%s.pickle" % contest.logName.replace(".log", ""))):
+    if (not os.path.exists("%s.pickle" % contest.log_name.replace(".log", ""))):
 
         logging.info("Checking folders and creating them")
         #--- Check if logfiles folder exists and create if not
@@ -99,17 +99,17 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
         if not isgood:
             return isgood, False
 
-        infile = open(contest.logName, "wb")
+        infile = open(contest.log_name, "wb")
         infile.write(downloadedlog)
         infile.close()
 
         logging.info("Creating Pandas object")
         #--- Create csv file header
-        csvfile = open(contest.logName.replace(".log",".csv"), "w")
+        csvfile = open(contest.log_name.replace(".log",".csv"), "w")
         csvfile.write("frequency,mode,date,time,mycall,urrst,urnr,call,myrst,mynr,stn\n")
 
         #--- Loop on lines info line by line to create data frame
-        infile = open(contest.logName)
+        infile = open(contest.log_name)
         lines = infile.readlines()
         for l in lines:
             line = l.split(":")[1].replace('\n', '')
@@ -121,15 +121,15 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
                 csvfile.write(line)
         csvfile.close()
         infile.close()
-        contest.log = pd.read_csv(contest.logName.replace(".log",".csv"), dtype=dict_types)
-        os.remove(contest.logName.replace(".log",".csv"))
+        contest.log = pd.read_csv(contest.log_name.replace(".log",".csv"), dtype=dict_types)
+        os.remove(contest.log_name.replace(".log",".csv"))
 
         #--- Read contest information for original log file
-        infile = open(contest.logName)
+        infile = open(contest.log_name)
         infile.seek(0)
         read_contest_general_info(contest, infile)
         infile.close()
-        os.remove(contest.logName)
+        os.remove(contest.log_name)
 
         return isgood, True
 

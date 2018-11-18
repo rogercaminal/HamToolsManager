@@ -1,18 +1,16 @@
 import logging
 import os
-
+from StringIO import StringIO
+import zipfile
 import numpy as np
 import pandas as pd
 
 
 def import_reverse_beacon_spots(contest):
     logging.info("Getting reverse beacon spots")
-    #--- Check if formatted pickle file exists and used unless otherwise specified
-    if (not os.path.exists("%s.pickle" % contest.logName.replace(".log", ""))):
 
-        from StringIO import StringIO
-        import zipfile
-
+    # --- Check if formatted pickle file exists and used unless otherwise specified
+    if not os.path.exists("%s.pickle" % contest.log_name.replace(".log", "")):
 
         spots_list = []
         contest_dates = contest.log.groupby("date").groups.keys()

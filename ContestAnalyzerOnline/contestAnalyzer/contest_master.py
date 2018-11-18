@@ -18,12 +18,12 @@ class Contest(object):
         self.rbspots = None
 
         self.save = False
-        self.folderToSave = ""
+        self.folder_to_save = ""
 
-        self.logName = ""
+        self.log_name = ""
 
-        self.maxRates = {}
-        self.ratesPerMinute = []
+        self.max_rates = {}
+        self.rates_per_minute = []
 
     def __str__(self):
         line = ""

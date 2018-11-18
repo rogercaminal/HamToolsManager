@@ -38,13 +38,11 @@ def read_contest_general_info(contest, infile):
     contest.category = "%s %s %s %s %s %s" % (contest.cat_operator, contest.cat_transmitter, contest.cat_band, contest.cat_assisted, contest.cat_power, contest.cat_mode)
 
 
-# ________________________________________________________________________________________________________
-
 def retrieve_contest_object(search_info):
     contestType = search_info["name"]
-    callsign    = search_info["callsign"]
-    year        = search_info["year"]
-    mode        = search_info["mode"]
+    callsign = search_info["callsign"]
+    year = search_info["year"]
+    mode = search_info["mode"]
 
     import pickle
     logname = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contestType, year, mode, callsign, contestType, year, mode, callsign)
@@ -53,44 +51,3 @@ def retrieve_contest_object(search_info):
     with open("%s.pickle" % logname.replace(".log", ""), 'rb') as myinput:
         contest = pickle.load(myinput)
     return contest
-    
-
-#________________________________________________________________________________________________________
-def print_contest_summary(contest):
-    print(contest)
-    print()
-    print('====================== S U M M A R Y =======================')
-    print(str("BAND").ljust(15),
-          str("QSOs").ljust(8),
-          str("DXCC").ljust(8),
-          str("Zn").ljust(8),
-          str("Pts").ljust(8),
-          str("Pts/QSO"))
-    qsos_cumul = 0
-    dxcc_cumul = 0
-    zones_cumul = 0
-    points_cumul = 0
-    for band in [10, 15, 20, 40, 80, 160]:
-        qsos   = contest.log[(contest.log["isdupe"]==False) & (contest.log["band"]==band)]["call"].count()
-        dxcc   = contest.log[(contest.log["isdupe"]==False) & (contest.log["band"]==band)]["dxcc"].value_counts().count()
-        zones  = contest.log[(contest.log["isdupe"]==False) & (contest.log["band"]==band)]["mynr"].value_counts().count()
-        points = contest.log[(contest.log["isdupe"]==False) & (contest.log["band"]==band)]["points"].sum()
-        qsos_cumul   += qsos
-        dxcc_cumul   += dxcc
-        zones_cumul  += zones
-        points_cumul += points
-        print(str(band).ljust(15),
-              str(qsos).ljust(8),
-              str(dxcc).ljust(8),
-              str(zones).ljust(8),
-              str(points).ljust(8),
-              str("%.2f" % (float(points)/qsos)).ljust(8))
-    print('------------------------------------------------------------')
-    print(str("TOTAL").ljust(15),
-          str(qsos_cumul).ljust(8),
-          str(dxcc_cumul).ljust(8),
-          str(zones_cumul).ljust(8),
-          str(points_cumul).ljust(8),
-          str("%.2f" % (float(points)/qsos)).ljust(8),
-          str("SCORE: %d" % ((zones_cumul+dxcc_cumul)*points_cumul)).ljust(8))
-    print('\n')
