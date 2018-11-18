@@ -1,6 +1,4 @@
-import os
-
-class contest(object):
+class Contest(object):
     def __init__(self):
         self.callsign = ""
         self.contest = ""

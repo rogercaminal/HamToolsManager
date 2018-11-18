@@ -1,9 +1,10 @@
 from django import forms
+from .models import Post
+from ContestAnalyzerOnline.contestAnalyzer.utils.downloads.logs import get_list_of_years
 
 
 def getYearsTuple():
-    import ContestAnalyzerOnline.contestAnalyzer.Utils
-    listYears = ContestAnalyzerOnline.contestAnalyzer.Utils.getListOfYears("cqww")
+    listYears = get_list_of_years("cqww")
     listTuples = list()
     for y in listYears:
         listTuples.append((y, y))
@@ -11,13 +12,12 @@ def getYearsTuple():
 
 #___________________________________________
 class ContestForm(forms.Form):
-    name     = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW")])
+    name = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW")])
     callsign = forms.CharField(label='Callsign', max_length=100)
-    year     = forms.ChoiceField(label='Year', choices=getYearsTuple())
-    mode     = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ph", "SSB")])
+    year = forms.ChoiceField(label='Year', choices=getYearsTuple())
+    mode = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ph", "SSB")])
 
 #___________________________________________
-from .models import Post
 class PostForm(forms.ModelForm):
 
     class Meta:
