@@ -83,18 +83,18 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
     dict_types["ismult"] = np.int64
 
     logging.info("Importing contest object")
-    #--- Check if formatted pickle file exists and used unless otherwise specified
-    if (not os.path.exists("%s.pickle" % contest.log_name.replace(".log", ""))):
+    # Check if formatted pickle file exists and used unless otherwise specified
+    if not os.path.exists("%s.pickle" % contest.log_name.replace(".log", "")):
 
         logging.info("Checking folders and creating them")
-        #--- Check if logfiles folder exists and create if not
-        if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))):
+        # Check if logfiles folder exists and create if not
+        if not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign)):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/" % (contestType, year, mode, callsign))
 
-        if (not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))):
+        if not os.path.exists("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign)):
             os.makedirs("ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contestType, year, mode, callsign))
 
-        #--- Download log file from web
+        # Download log file from web
         isgood, downloadedlog = get_log(contestType, callsign, year, mode)
         if not isgood:
             return isgood, False
@@ -104,11 +104,11 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
         infile.close()
 
         logging.info("Creating Pandas object")
-        #--- Create csv file header
+        # Create csv file header
         csvfile = open(contest.log_name.replace(".log",".csv"), "w")
         csvfile.write("frequency,mode,date,time,mycall,urrst,urnr,call,myrst,mynr,stn\n")
 
-        #--- Loop on lines info line by line to create data frame
+        # Loop on lines info line by line to create data frame
         infile = open(contest.log_name)
         lines = infile.readlines()
         for l in lines:
@@ -124,7 +124,7 @@ def import_log(contest, contestType, year, mode, callsign, forceCSV=False):
         contest.log = pd.read_csv(contest.log_name.replace(".log",".csv"), dtype=dict_types)
         os.remove(contest.log_name.replace(".log",".csv"))
 
-        #--- Read contest information for original log file
+        # Read contest information for original log file
         infile = open(contest.log_name)
         infile.seek(0)
         read_contest_general_info(contest, infile)

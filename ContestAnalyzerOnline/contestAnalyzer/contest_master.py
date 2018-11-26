@@ -41,7 +41,7 @@ class Contest(object):
         line += "Club: %s\n" % self.club
         return line 
 
-    def importLog(self, year, mode, callsign, forceCSV=False):
+    def import_log(self, year, mode, callsign, forceCSV=False):
         pass
 
     def make_plots(self, save):

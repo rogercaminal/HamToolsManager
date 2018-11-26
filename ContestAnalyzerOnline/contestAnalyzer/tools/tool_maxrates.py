@@ -11,7 +11,7 @@ class ToolMaxRates(ToolBase):
 
     def apply_to_all(self, contest):
 
-        #--- Define function to compute time ranges
+        # Define function to compute time ranges
         def daterange(time_start, time_end):
             r = []
             for d in range(2):
@@ -19,13 +19,13 @@ class ToolMaxRates(ToolBase):
                     r.append(time_start + timedelta(days=d, seconds=n))
             return r
 
-        #--- Get initial and final times
+        # Get initial and final times
         date_range = daterange(pd.to_datetime("%s 00:00:00"%contest.log["date"].iloc[0]), pd.to_datetime("%s 23:59:00"%contest.log["date"].iloc[-1]))
 
-        #--- Steps to compute
+        # Steps to compute
         steps = [1, 5, 10, 30, 60, 120]
 
-        #--- Get max rates
+        # Get max rates
         for mins in steps:
             max_qsos = 0
             max_date = []
@@ -34,16 +34,16 @@ class ToolMaxRates(ToolBase):
                 if qsos>max_qsos:
                     max_qsos = qsos
                     max_date = [date_range[d], date_range[d+mins]]
-            contest.maxRates["%dmin"%mins] = [max_qsos, max_date]
+            contest.max_rates["%dmin"%mins] = [max_qsos, max_date]
 
-        #--- Mark selected QSOs in log
+        # Mark selected QSOs in log
         for mins in steps:
             contest.log["maxRate_%dmin"%mins] = np.where(
-                    ((contest.log["datetime"]>=contest.maxRates["%dmin"%mins][1][0]) & (contest.log["datetime"]<contest.maxRates["%dmin"%mins][1][1])),
+                    ((contest.log["datetime"]>=contest.max_rates["%dmin"%mins][1][0]) & (contest.log["datetime"]<contest.max_rates["%dmin"%mins][1][1])),
                     1,
                     0)
 
-        #--- Store list of rates per minute of contest
+        # Store list of rates per minute of contest
         listDates = list(contest.log.groupby("date").groups.keys())
         listDates.sort()
 
@@ -53,6 +53,6 @@ class ToolMaxRates(ToolBase):
                 listRates.append([])
                 for m in range(60):
                     time = "%s%s"%(str(h).zfill(2), str(m).zfill(2))
-                    counts = contest.log[(contest.log["date"]==date) & (contest.log["time"]==time)]["call"].count()
+                    counts = contest.log[(contest.log["date"] == date) & (contest.log["time"] == time)]["call"].count()
                     listRates[h+i*24].append(counts)
         contest.ratesPerMinute = listRates

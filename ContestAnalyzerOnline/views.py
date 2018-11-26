@@ -52,16 +52,12 @@ def process(request):
                                                                    mode, callsign
                                                                    )
     contest.folder_to_save = "{}/{}_{}_{}_{}/plots/".format(folder_data, contest_type, year, mode, callsign)
-    #contest#.log_name = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/log_%s_%s_%s_%s.log" % (contest_type, year,
-    #                                                                                                   mode, callsign,
-    #                                                                                                   contest_type, year,
-    #                                                                                                   mode, callsign
-    #                                                                                                   )
-    #contest.folder_to_save = "ContestAnalyzerOnline/contestAnalyzer/data/%s_%s_%s_%s/plots/" % (contest_type, year, mode,
-    #                                                                                            callsign
-    #                                                                                            )
     contest.year = year
-    is_good, do_loop = import_log(contest=contest, contestType=contest_type, year=year, mode=mode, callsign=callsign, forceCSV=False)
+    contest.contest = contest_type
+
+    is_good, do_loop = import_log(contest=contest, contestType=contest_type, year=year, mode=mode,
+                                  callsign=callsign, forceCSV=False
+                                  )
 
     # The call sign does not exist, provide list of available call signs
     if not is_good:
@@ -82,7 +78,7 @@ def process(request):
 
     # Download reverse beacon spots
     reverse_beacon_spots_is_good = import_reverse_beacon_spots(contest=contest)
-    if reverse_beacon_spots_is_good == False:
+    if not reverse_beacon_spots_is_good:
         raise(NameError)
 
     if do_loop:
@@ -127,12 +123,12 @@ def main_page(request):
 
 # ________________________________________________________________________________________________________
 def contest_summary(request):
-    #--- Get info from form
+    # Get info from form
     search_info = request.session['cleaned_data']
     if "new_callsign" in request.session.keys():
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
-    #--- Retrieve contest object from pickle file
+    # Retrieve contest object from pickle file
     contest = retrieve_contest_object(search_info)
 
     summary_info = []
@@ -588,8 +584,7 @@ def maps(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     #--- Retrieve contest object from pickle file
-    import ContestAnalyzerOnline.contestAnalyzer.utils
-    contest = ContestAnalyzerOnline.contestAnalyzer.utils.contest.retrieve_contest_object(search_info)
+    contest = retrieve_contest_object(search_info)
 
     #--- Get keys from link
     options  = ""

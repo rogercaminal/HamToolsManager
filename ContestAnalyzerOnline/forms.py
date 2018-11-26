@@ -12,7 +12,7 @@ def getYearsTuple():
 
 #___________________________________________
 class ContestForm(forms.Form):
-    name = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW")])
+    name = forms.ChoiceField(label='Contest name', choices=[("cqww", "CQ WW"), ("cqwpx", "CQ WPX")])
     callsign = forms.CharField(label='Callsign', max_length=100)
     year = forms.ChoiceField(label='Year', choices=getYearsTuple())
     mode = forms.ChoiceField(label='Mode', choices=[("cw", "CW"), ("ph", "SSB")])

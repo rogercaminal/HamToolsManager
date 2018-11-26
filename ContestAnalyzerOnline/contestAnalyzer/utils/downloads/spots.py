@@ -4,6 +4,7 @@ from StringIO import StringIO
 import zipfile
 import numpy as np
 import pandas as pd
+from urllib2 import urlopen
 
 
 def import_reverse_beacon_spots(contest):
