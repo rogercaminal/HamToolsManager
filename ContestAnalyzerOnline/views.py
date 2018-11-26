@@ -104,6 +104,7 @@ def process(request):
         #--- Save contest object to pickle file
         with open("%s.pickle" % contest.log_name.replace(".log", ""), 'wb') as output:
             pickle.dump(contest, output, pickle.HIGHEST_PROTOCOL)
+        contest.log.to_csv("%s.csv" % contest.log_name.replace(".log", ""), index=False)
 
     return redirect('contestAnalyzer:mainPage')
 
