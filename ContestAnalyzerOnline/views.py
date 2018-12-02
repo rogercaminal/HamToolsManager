@@ -1,14 +1,8 @@
 from django.shortcuts import render, redirect
-import pandas as pd
-import pickle
 from string import ascii_uppercase
 from ContestAnalyzerOnline.forms import ContestForm
-from ContestAnalyzerOnline.contestAnalyzer.contest_master import Contest
-from ContestAnalyzerOnline.contestAnalyzer.utils.downloads.logs import get_list_of_logs, import_log
-from ContestAnalyzerOnline.contestAnalyzer.utils.downloads.spots import import_reverse_beacon_spots
-from ContestAnalyzerOnline.contestAnalyzer.utils.contest import retrieve_contest_object
-from ContestAnalyzerOnline.contestAnalyzer.tool_dictionary import tool_dictionary
-from ContestAnalyzerOnline.contestAnalyzer.plot_dictionary import plot_dictionary
+from pycontestanalyzer.contest import Contest
+from pycontestanalyzer.utils.downloads.logs import get_list_of_logs
 
 import logging
 logging.basicConfig(format='%(levelname)s: %(asctime)s UTC  -  views.py : %(message)s', level=logging.DEBUG)
@@ -44,67 +38,39 @@ def process(request):
         request.session['new_callsign'] = callsign
 
     # --- Download log and process it
-    contest = Contest()
-    folder_data = "ContestAnalyzerOnline/contestAnalyzer/data/"
-    contest.log_name = "{}/{}_{}_{}_{}/log_{}_{}_{}_{}.log".format(folder_data, contest_type, year,
-                                                                   mode, callsign,
-                                                                   contest_type, year,
-                                                                   mode, callsign
-                                                                   )
-    contest.folder_to_save = "{}/{}_{}_{}_{}/plots/".format(folder_data, contest_type, year, mode, callsign)
-    contest.year = year
-    contest.contest = contest_type
-
-    is_good, do_loop = import_log(contest=contest, contestType=contest_type, year=year, mode=mode,
-                                  callsign=callsign, forceCSV=False
-                                  )
+    contest = Contest(
+        contest=contest_type,
+        year=year,
+        mode=mode,
+        callsign=callsign,
+        output_folder="./data/"
+    )
 
     # The call sign does not exist, provide list of available call signs
-    if not is_good:
-        list_of_calls = get_list_of_logs(contestType=contest_type, year=year, mode=mode)
+    if not contest.call_exists:
+        list_of_calls = get_list_of_logs(contest_type=contest_type, year=year, mode=mode)
         list_of_calls.sort()
-        callsDict = {}
+        calls_dict = {}
         for number in range(1,10):
-            callsDict[str(number)] = []
+            calls_dict[str(number)] = []
             for call in list_of_calls:
                 if call[0] == str(number):
-                    callsDict[str(number)].append(call)
+                    calls_dict[str(number)].append(call)
         for letter in ascii_uppercase:
-            callsDict[letter] = []
+            calls_dict[letter] = []
             for call in list_of_calls:
-                if call[0]==letter:
-                    callsDict[letter].append(call)
-        return render(request, 'analysis_availablecalls.html', {'contest': contest, 'callsDict':sorted(callsDict.items())})
+                if call[0] == letter:
+                    calls_dict[letter].append(call)
+        return render(request, 'analysis_availablecalls.html', {'contest': contest, 'callsDict':sorted(calls_dict.items())})
 
-    # Download reverse beacon spots
-    reverse_beacon_spots_is_good = import_reverse_beacon_spots(contest=contest)
-    if not reverse_beacon_spots_is_good:
-        raise(NameError)
+    # Check whether reverse beacon spots have been downloaded correctly
+    if not contest.download_spots_ok:
+        raise(NameError("Beacon spots not downloaded correctly"))
 
-    if do_loop:
-        # Get toolDictionary, with the tools to be applied.
-        # To add a new tool:
-        # - Define the class in a separate file
-        # - Add it in toolDictionary
-        logging.info("Importing tool dictionary")
-        tool_dict = tool_dictionary
-
-        # If it's a new log, loop on tools.
-        # Two functions:
-        # - applyToAll if computed using built-in functions in data frame.
-        # - applyToRow if complex function that needs to be computed qso by qso.
-        for tool in tool_dict.names():
-            logging.info("Applying tool {}".format(tool))
-            contest.log = contest.log.apply(lambda row: tool_dict.tools()[tool].apply_to_row(row), axis=1)
-            tool_dict.tools()[tool].apply_to_all(contest)
-
-        # Common: format fix for datetime
-        contest.log["datetime"] = pd.to_datetime(contest.log["datetime"])
-
-        #--- Save contest object to pickle file
-        with open("%s.pickle" % contest.log_name.replace(".log", ""), 'wb') as output:
-            pickle.dump(contest, output, pickle.HIGHEST_PROTOCOL)
-        contest.log.to_csv("%s.csv" % contest.log_name.replace(".log", ""), index=False)
+    # Loop over the tools if necessary
+    logging.info("Process logs...")
+    contest.process()
+    logging.info("Logs processed")
 
     return redirect('contestAnalyzer:mainPage')
 

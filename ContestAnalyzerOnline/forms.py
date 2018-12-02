@@ -1,6 +1,6 @@
 from django import forms
 from .models import Post
-from ContestAnalyzerOnline.contestAnalyzer.utils.downloads.logs import get_list_of_years
+from pycontestanalyzer.utils.downloads.logs import get_list_of_years
 
 
 def getYearsTuple():

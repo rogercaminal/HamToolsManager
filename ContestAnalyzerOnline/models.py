@@ -2,11 +2,11 @@ from __future__ import unicode_literals
 
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.utils import timezone
 
 class Post(models.Model):
-    author = models.ForeignKey('auth.User')
+    author = models.ForeignKey('auth.User', on_delete=models.PROTECT)
     title = models.CharField(max_length=300, default="")
     email = models.EmailField(max_length=300, blank=True)
     text = models.TextField()
