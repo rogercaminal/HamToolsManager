@@ -1,11 +1,17 @@
 from django.shortcuts import render, redirect
 from string import ascii_uppercase
+import itertools
 from ContestAnalyzerOnline.forms import ContestForm
 from pycontestanalyzer.contest import Contest
 from pycontestanalyzer.utils.downloads.logs import get_list_of_logs
+from pycontestanalyzer.utils.contest import retrieve_contest_object
+from pycontestanalyzer.plot_dictionary import plot_dictionary
 
 import logging
 logging.basicConfig(format='%(levelname)s: %(asctime)s UTC  -  views.py : %(message)s', level=logging.DEBUG)
+
+# Define output folder
+output_folder = "./data/"
 
 
 # ________________________________________________________________________________________________________
@@ -25,25 +31,25 @@ def index(request):
 
 # ________________________________________________________________________________________________________
 def process(request):
-    # --- Get info from form
+    # Get info from form
     search_info = request.session['cleaned_data']
     contest_type = search_info["name"]
     callsign = search_info["callsign"].upper()
     year = search_info["year"]
     mode = search_info["mode"]
 
-    # --- Get call from availablecalls.html page. Store it in new_callsign so that it's available everywhere.
+    # Get call from availablecalls.html page. Store it in new_callsign so that it's available everywhere.
     if request.GET.get('call'):
         callsign = str(request.GET.get('call'))
         request.session['new_callsign'] = callsign
 
-    # --- Download log and process it
+    # Download log and process it
     contest = Contest(
         contest=contest_type,
         year=year,
         mode=mode,
         callsign=callsign,
-        output_folder="./data/"
+        output_folder=output_folder
     )
 
     # The call sign does not exist, provide list of available call signs
@@ -83,7 +89,7 @@ def main_page(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     # --- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
     return render(request, 'analysis_main.html', {'contest': contest, 'nbar':'main'})
 
@@ -96,7 +102,7 @@ def contest_summary(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     # Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
     summary_info = []
     summary_info_total = []
@@ -155,7 +161,7 @@ def contest_log(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     # --- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
     qsos_page = 50
 
@@ -323,8 +329,8 @@ def contest_rates(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     # --- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
-    rates = contest.maxRates
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
+    rates = contest.max_rates
 
     rates_info = []
     rates_info.append(["1",   rates["1min"][0],   rates["1min"][0]/1.,     rates["1min"][0]*60./1.,     str(rates["1min"][1][0]),  str(rates["1min"][1][1])])
@@ -339,13 +345,13 @@ def contest_rates(request):
 
 #________________________________________________________________________________________________________
 def contest_rates_per_minute(request):
-    #--- Get info from form
+    # Get info from form
     search_info = request.session['cleaned_data']
     if "new_callsign" in request.session.keys():
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
-    #--- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    # Retrieve contest object from pickle file
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
     list_rates = contest.ratesPerMinute
 
@@ -353,7 +359,7 @@ def contest_rates_per_minute(request):
     for i in range(60):
         range_mins.append(str(i).zfill(2))
 
-    days = contest.log.groupby("date").groups.keys()
+    days = list(contest.log.groupby("date").groups.keys())
     days.sort()
 
     range_hours = []
@@ -387,7 +393,7 @@ def contest_dxcc_frequency(request):
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
     # --- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
     qsos_page = 10
 
@@ -448,20 +454,20 @@ def contest_dxcc_frequency(request):
 
 #________________________________________________________________________________________________________
 def contest_plots(request):
-    #--- Get info from form
+    # Get info from form
     search_info = request.session['cleaned_data']
     if "new_callsign" in request.session.keys():
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
-    #--- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    # Retrieve contest object from pickle file
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
-    #--- Get keys from link
+    # Get keys from link
     plot_key = "dummie"
     if request.GET.get('chart'):
         plot_key = str(request.GET.get('chart'))
 
-    options  = ""
+    options = ""
     if request.GET.get('options'):
         options = str(request.GET.get('options'))
     else:
@@ -478,7 +484,7 @@ def contest_plots(request):
             options += "from%s,to%s,"%(fromto[0:4], fromto[4:8])
         options = options[:-1]
 
-    #--- Generate code to inject to html
+    # Generate code to inject to html
 
     plot_dict = plot_dictionary
     plot_snippet = ""
@@ -486,7 +492,7 @@ def contest_plots(request):
         if plot == plot_key:
             plot_snippet = plot_dict.plots()[plot_key].do_plot(contest=contest, doSave=True, options=options)
 
-    # --- Mark active block in html
+    # Mark active block in html
     nbar=""
     if plot_key=='plot_qsos_vs_time__band':
         nbar="rates"
@@ -512,6 +518,8 @@ def contest_plots(request):
         nbar="operation"
     if plot_key=='plot_cwspeed':
         nbar="morse"
+    if plot_key == 'plot_cwsignal':
+        nbar = "morse"
 
     #--- Lateral bar
     latbar = ""
@@ -526,7 +534,7 @@ def contest_plots(request):
     if plot_key=='plot_cwspeed':
         latbar="cwspeed"
 
-    #--- Old options to retain
+    # Old options to retain
     old_options = ""
     for opt in options.split(","):
         if "plot_heading" in plot_key:
@@ -545,16 +553,16 @@ def contest_plots(request):
 
 #________________________________________________________________________________________________________
 def maps(request):
-    #--- Get info from form
+    # Get info from form
     search_info = request.session['cleaned_data']
     if "new_callsign" in request.session.keys():
         request.session['cleaned_data']['callsign'] = request.session['new_callsign']
 
-    #--- Retrieve contest object from pickle file
-    contest = retrieve_contest_object(search_info)
+    # Retrieve contest object from pickle file
+    contest = retrieve_contest_object(search_info=search_info, output_folder=output_folder)
 
-    #--- Get keys from link
-    options  = ""
+    # Get keys from link
+    options = ""
     options_str = ""
     if request.GET.get('options'):
         options = str(request.GET.get('options')).split(",")
@@ -569,21 +577,20 @@ def maps(request):
         options = options[:-1].split(",")
 
     list_calls = None
-    extraConditions = (contest.log["band"]>0)
+    extra_conditions = (contest.log["band"]>0)
     for opt in options:
         if "band" in opt:
             options_str = opt+","
             band = int(opt.replace("band", ""))
-            extraConditions &= (contest.log["band"]==band)
+            extra_conditions &= (contest.log["band"]==band)
         if "from" in opt:
             time_from = str(opt.replace("from", ""))
-            extraConditions &= (contest.log["time"]>=time_from)
+            extra_conditions &= (contest.log["time"]>=time_from)
         if "to" in opt:
             time_to   = str(opt.replace("to", ""))
-            extraConditions &= (contest.log["time"]<=time_to)
-    list_calls = contest.log[extraConditions][["call", "latitude", "longitude"]].dropna().values.tolist()
+            extra_conditions &= (contest.log["time"]<=time_to)
+    list_calls = contest.log[extra_conditions][["call", "latitude", "longitude"]].dropna().values.tolist()
 
-    import itertools
     list_calls.sort()
     list_calls_unique =  list(k for k,_ in itertools.groupby(list_calls))
 

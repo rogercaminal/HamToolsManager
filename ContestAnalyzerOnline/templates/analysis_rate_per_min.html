@@ -8,12 +8,12 @@
             <thead>
               <th></th>
               {% for min in range_mins %}
-              <th> {{ min }} </th>
+              <th> {{ min }}</th>
               {% endfor %}
             </thead>
 
             <tbody>
-              {% for day, hour, rate in listRates %}
+              {% for day, hour, rate in list_rates %}
                 <tr class="thc">
                   <td><b>{{ hour }}</b></td>
                   {% for r in rate %}
